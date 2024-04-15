@@ -6,7 +6,7 @@ from RNN_utilities import get_XY, create_GRU, create_LSTM, create_RNN, print_pre
 
 num_props = 1
  
-ws_range = range(2, 7)
+ws_range = range(20, 70, 10)
 
 hidden_range = range(20, 120, 20)
 

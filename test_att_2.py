@@ -50,8 +50,8 @@ def my_token(xv, yv, name_file):
 
 num_props = 1
  
-ws_range = [1]
-resave = False
+ws_range = range(20, 70, 10)
+resave = True
 if resave:
     for filename in os.listdir("actual_train"):
 
@@ -227,24 +227,24 @@ for filename in os.listdir("actual_train"):
             print(f"Epoch Training time: {(time()-now)/60:.2f} minutes.")
 
         model_name = "GRU_Att"
-        if not os.path.isdir("train_attention2/" + varname + "/models/" + model_name):
-            os.makedirs("train_attention2/" + varname + "/models/" + model_name)
+        if not os.path.isdir("train_attention" + str(ws_use - min(ws_range) + 5 + len(ws_range)) + "/" + varname + "/models/" + model_name):
+            os.makedirs("train_attention" + str(ws_use - min(ws_range) + 5 + len(ws_range)) + "/" + varname + "/models/" + model_name)
 
-        if not os.path.isdir("train_attention2/" + varname + "/predictions/train/" + model_name):
-            os.makedirs("train_attention2/" + varname + "/predictions/train/" + model_name)
+        if not os.path.isdir("train_attention" + str(ws_use - min(ws_range) + 5 + len(ws_range)) + "/" + varname + "/predictions/train/" + model_name):
+            os.makedirs("train_attention" + str(ws_use - min(ws_range) + 5 + len(ws_range)) + "/" + varname + "/predictions/train/" + model_name)
     
-        if not os.path.isdir("train_attention2/" + varname + "/predictions/test/" + model_name):
-            os.makedirs("train_attention2/" + varname + "/predictions/test/" + model_name)
+        if not os.path.isdir("train_attention" + str(ws_use - min(ws_range) + 5 + len(ws_range)) + "/" + varname + "/predictions/test/" + model_name):
+            os.makedirs("train_attention" + str(ws_use - min(ws_range) + 5 + len(ws_range)) + "/" + varname + "/predictions/test/" + model_name)
     
-        if not os.path.isdir("train_attention2/" + varname + "/predictions/val/" + model_name):
-            os.makedirs("train_attention2/" + varname + "/predictions/val/" + model_name)
+        if not os.path.isdir("train_attention" + str(ws_use - min(ws_range) + 5 + len(ws_range)) + "/" + varname + "/predictions/val/" + model_name):
+            os.makedirs("train_attention" + str(ws_use - min(ws_range) + 5 + len(ws_range)) + "/" + varname + "/predictions/val/" + model_name)
         
-        save_object("train_attention2/" + varname + "/models/" + model_name + "/" + varname + "_" + model_name + "_ws_" + str(ws_use) + "_train_losses", train_losses)
+        save_object("train_attention" + str(ws_use - min(ws_range) + 5 + len(ws_range)) + "/" + varname + "/models/" + model_name + "/" + varname + "_" + model_name + "_ws_" + str(ws_use) + "_train_losses", train_losses)
 
-        save_object("train_attention2/" + varname + "/models/" + model_name + "/" + varname + "_" + model_name + "_ws_" + str(ws_use) + "_val_losses", val_losses)
+        save_object("train_attention" + str(ws_use - min(ws_range) + 5 + len(ws_range)) + "/" + varname + "/models/" + model_name + "/" + varname + "_" + model_name + "_ws_" + str(ws_use) + "_val_losses", val_losses)
 
         model.seq2seq.eval()
-        torch.save(model.seq2seq.state_dict(), "train_attention2/" + varname + "/models/" + model_name + "/" + varname + "_" + model_name + "_ws_" + str(ws_use) + ".pth")
+        torch.save(model.seq2seq.state_dict(), "train_attention" + str(ws_use - min(ws_range) + 5 + len(ws_range)) + "/" + varname + "/models/" + model_name + "/" + varname + "_" + model_name + "_ws_" + str(ws_use) + ".pth")
 
         with torch.no_grad():
 
@@ -264,7 +264,7 @@ for filename in os.listdir("actual_train"):
                 )
                 y_train_all.append([str(ex)]) 
                 predict_train_all.append([translation]) 
-            print_predictions(y_train_all, predict_train_all, "train_attention2/" + varname + "/predictions/train/" + model_name + "/" + varname + "_" + model_name + "_ws_" + str(ws_use) + "_train.csv") 
+            print_predictions(y_train_all, predict_train_all, "train_attention" + str(ws_use - min(ws_range) + 5 + len(ws_range)) + "/" + varname + "/predictions/train/" + model_name + "/" + varname + "_" + model_name + "_ws_" + str(ws_use) + "_train.csv") 
             
             y_val_all = []
             predict_val_all = []
@@ -282,7 +282,7 @@ for filename in os.listdir("actual_train"):
                 )
                 y_val_all.append([str(ex)]) 
                 predict_val_all.append([translation]) 
-            print_predictions(y_val_all, predict_val_all, "train_attention2/" + varname + "/predictions/val/" + model_name + "/" + varname + "_" + model_name + "_ws_" + str(ws_use) + "_val.csv")     
+            print_predictions(y_val_all, predict_val_all, "train_attention" + str(ws_use - min(ws_range) + 5 + len(ws_range)) + "/" + varname + "/predictions/val/" + model_name + "/" + varname + "_" + model_name + "_ws_" + str(ws_use) + "_val.csv")     
     
             y_test_all = []
             predict_test_all = []
@@ -300,4 +300,4 @@ for filename in os.listdir("actual_train"):
                 )
                 y_test_all.append([str(ex)]) 
                 predict_test_all.append([translation]) 
-            print_predictions(y_test_all, predict_test_all, "train_attention2/" + varname + "/predictions/test/" + model_name + "/" + varname + "_" + model_name + "_ws_" + str(ws_use) + "_test.csv")
+            print_predictions(y_test_all, predict_test_all, "train_attention" + str(ws_use - min(ws_range) + 5 + len(ws_range)) + "/" + varname + "/predictions/test/" + model_name + "/" + varname + "_" + model_name + "_ws_" + str(ws_use) + "_test.csv")
