@@ -1,0 +1,141 @@
+2015FernandezArguedas, 
+2023Wang, 
+
+2020Wang2,
+
+number of nearest neighbors considered
+Anomaly measure k = 1 k = 2 k = 3 k = 4 k = 5
+Genie 96.23% 97.46% 98.76% 97.79% 97.88%
+SNN (Laxhammar & Falkman, 2011) 97.28% 97.66% 97.63% 97.57% 97.37%
+SVM (Piciarelli et al., 2008) 96.30% k = 3
+Discords (Keogh et al., 2005) 97.40%  k = 3
+
+Average accuracy for different anomaly 
+measures on the simulated data
+
+2017Duca, 
+
+In any cases, our algorithm reaches
+good performances:
+ even in the worst case, it is able to
+ reach a
+precision of 0.794, 
+a recall of 0.785 and 
+an accuracy of 0.931.
+
+2021Magnussen, 
+
+Our experiments show promising results with 
+the final model obtaining an accuracy score of 41% and 
+87.1% on a destination port- and region basis 
+respectively. While some related works 
+obtain higher accuracy results - notably 
+ port destination prediction accuracy -
+ the results are not directly comparable, 
+as no related literature found deals with the problem
+ of predicting oil tanker
+ destination on a global scale specifically.
+
+Le2016TrajectoryPO, 
+
+Let Dthreshold = 0.10, When all of the trajectories are input to the model, 
+Pr = 0.8399 with r = 1, Pr = 0.9081 with r = 2, 
+Pr = 0.9626 with r = 5, and  Pr = 0.9769 with r = 10. 
+The prediction accuracy becomes higher when the
+ number of candidates becomes larger. 
+Although more candidates may lead to 
+multiple results and complicate the prediction results,
+ more candidates are desirable in some applications
+
+As shown in Figure 7,
+ when all of the trajectories are input
+ to the model, Pr = 0.9626 with 
+Dthershold = 0.10, Pr = 0.9558 with 
+Dthershold = 0.08, Pr = 0.9486 with Dthershold =
+ 0.06, and Pr = 0.9308 Pr with Dthershorld = 0.04.
+ The prediction accuracy becomes lower 
+when the value of Dthershold becomes smaller. 
+When Dthershold becomes smaller, the distance 
+between two adjacent Center Trajectories becomes smaller.
+Thus, it becomes more difficult for classifiers 
+to make a correct judgment. 
+From the point of view of prediction, 
+when the prediction precision becomes higher,
+ the prediction accuracy becomes lower. 
+This is consistent with the actual situation.
+
+2021Karatas, 
+The best solution is reported as 97% precision with the Random Forest algorithm.
+
+2019Liang, 
+2018FernandezArguedas, 
+2014FernandezArguedas, 
+2008Ristic, 
+2021Mehri, 
+2022Singh, 
+2023Mehri, 
+2018Virjonen
+
+Reconstruction of Missing Trajectory Data: A Deep Learning Approach
+Ziwei Wang, Shiyao Zhang, and James J.Q. Yu, Member, IEEE
+
+TABLE II
+DATA RECOVERY ACCURACY OF THE PROPOSED APPROACH
+ = 1  = 5  = 10  = 15
+Accuracy (%) Variance Accuracy (%) Variance Accuracy (%) Variance Accuracy (%) Variance
+p = 0.05 99.32 0.0002 97.34 0.0026 93.68 0.0079 89.17 0.0178
+p = 0.10 98.81 0.0003 96.15 0.0036 91.24 0.0131 87.30 0.0262
+p = 0.15 98.44 0.0005 94.60 0.0049 90.70 0.0152 85.42 0.0310
+p = 0.20 98.38 0.0008 93.34 0.0070 86.78 0.0210 84.43 0.0326
+TABLE III
+COMPARISON OF DATA RECOVERY ACCURACY
+p = 0.05,  = 15 p = 0.10,  = 15 p = 0.15,  = 15 p = 0.20,  = 15
+Accuracy (%) Variance Accuracy (%) Variance Accuracy (%) Variance Accuracy (%) Variance
+Proposed 89.17 0.0178 87.30 0.0262 85.42 0.0310 84.43 0.0326
+GRU 88.16 0.0262 82.11 0.0524 78.78 0.0854 72.56 0.1015
+GRU-ED 84.18 0.0337 80.41 0.0621 75.22 0.0856 74.16 0.0572
+GRU-Attn 85.04 0.0350 81.79 0.0431 79.99 0.0485 77.85 0.0688
+ARIMA 88.64 0.0357 84.00 0.0573 80.87 0.0717 79.28 0.0814
+Kalman Filter 88.08 0.0339 82.80 0.0603 79.61 0.0787 78.22 0.0833
+
+GRU LSTM RNN Markov
+direction
+81.65
+-176.27
+73.14
+69.91
+latitude_no_abs
+88.34
+-98065.53
+93.07
+86.2
+longitude_no_abs
+90.7
+-152266.28
+92.76
+81.84
+speed
+94.15
+-16.36
+93.98
+94.06
+time
+20.89
+-3276.37
+13.44
+-21.86
+
+r2_pred r2_pred_wt r2_long_pred r2_long_pred_wt r2_lat_pred r2_lat_pred_wt r2_time
+
+GRU long no abs 91.73 94.47 91.17 95.57 92.28 96.12 99.96
+GRU long speed dir 63.8 75.85 91.91 95.94 35.68 67.82 99.96
+GRU long speed ones dir 64.93 76.61 91.97 95.96 37.89 68.92 99.96
+LSTM long no abs -5178008.14 -3452105.98 -5589774.07 -2795037.86 -4766242.2 -2383271.93 -301.65
+LSTM long speed dir -6.1 -104.62 -12.8 -157.23 0.61 -150.52 -301.65
+LSTM long speed ones dir -264.65 -276.99 -286.06 -293.86 -243.25 -272.45 -301.65
+RNN long no abs 48.64 65.75 14.28 57.11 83.01 91.48 99.95
+RNN long speed dir 61.34 74.21 90.05 95.0 32.62 66.28 99.95
+RNN long speed ones dir 62.0 74.65 89.87 94.91 34.13 67.04 99.95
+markov long no abs 95.99 97.3 95.17 97.56 96.8 98.37 99.94
+markov long speed dir 95.66 97.09 92.83 96.38 98.5 99.22 99.94
+markov long speed ones dir 95.63 97.07 92.51 96.22 98.75 99.34 99.94
