@@ -42,16 +42,21 @@ def my_token(xv, yv, name_file):
     
     strpr = "x>y\n"
     for ix1 in range(len(xv)): 
-        strpr += str(xv[ix1]) + ">" + str(yv[ix1]) + "\n"
+        strpr += str(xv[ix1]).strip() + ">" + str(yv[ix1]).strip() + "\n"
+
+    while "  " in strpr:
+        strpr = strpr.replace("  ", " ")
 
     file_processed = open(name_file, "w")
     file_processed.write(strpr.replace("[", "").replace("]", "").replace(".", "a").replace(",", "a"))
     file_processed.close()
 
 num_props = 1
- 
-ws_range = range(20, 70, 10)
-resave = True
+
+ws_range = range(5, 7)
+model_name = "GRU_Att"
+
+resave = False
 if resave:
     for filename in os.listdir("actual_train"):
 
@@ -68,7 +73,7 @@ if resave:
 
             for k in file_object_train:
 
-                x_train_part, y_train_part = get_XY(file_object_train[k], ws_use)
+                x_train_part, y_train_part = get_XY(file_object_train[k], ws_use, 1, ws_use)
                 
                 for ix in range(len(x_train_part)):
                     x_train_all.append(x_train_part[ix]) 
@@ -82,7 +87,7 @@ if resave:
 
             for k in file_object_test:
 
-                x_test_part, y_test_part = get_XY(file_object_test[k], ws_use)
+                x_test_part, y_test_part = get_XY(file_object_test[k], ws_use, 1, ws_use)
                 
                 for ix in range(len(x_test_part)):
                     x_test_all.append(x_test_part[ix]) 
@@ -91,12 +96,26 @@ if resave:
             x_test_all = np.array(x_test_all)
             y_test_all = np.array(y_test_all)
             
+            x_test_all_short = []
+            y_test_all_short = []
+
+            for k in file_object_test:
+
+                x_test_part, y_test_part = get_XY(file_object_test[k], ws_use, ws_use, ws_use)
+                
+                for ix in range(len(x_test_part)):
+                    x_test_all_short.append(x_test_part[ix]) 
+                    y_test_all_short.append(y_test_part[ix])
+
+            x_test_all_short = np.array(x_test_all_short)
+            y_test_all_short = np.array(y_test_all_short)
+            
             x_val_all = []
             y_val_all = []
 
             for k in file_object_val:
 
-                x_val_part, y_val_part = get_XY(file_object_val[k], ws_use)
+                x_val_part, y_val_part = get_XY(file_object_val[k], ws_use, 1, ws_use)
                 
                 for ix in range(len(x_val_part)):
                     x_val_all.append(x_val_part[ix]) 
@@ -113,191 +132,234 @@ if resave:
             my_token(x_train_all, y_train_all, "tokenized_data/" + varname + "/" + varname + "_train_" + str(ws_use) + ".csv")
             my_token(x_val_all, y_val_all, "tokenized_data/" + varname + "/" + varname + "_val_" + str(ws_use) + ".csv")
             my_token(x_test_all, y_test_all, "tokenized_data/" + varname + "/" + varname + "_test_" + str(ws_use) + ".csv")
-        
-for filename in os.listdir("actual_train"):
-    for ws_use in ws_range:
-        varname = filename.replace("actual_train_", "")
+            my_token(x_test_all_short, y_test_all_short, "tokenized_data/" + varname + "/" + varname + "_test_short_" + str(ws_use) + ".csv")
 
-        src_field, trg_field = build_fields()
-        train_set, val_set, test_set = get_datasets(train_path="tokenized_data/" + varname + "/" + varname + "_train_" + str(ws_use) + ".csv", 
-                                                    val_path="tokenized_data/" + varname + "/" + varname + "_val_" + str(ws_use) + ".csv", 
-                                                    test_path="tokenized_data/" + varname + "/" + varname + "_test_" + str(ws_use) + ".csv",
-                                                    src_field=src_field, 
-                                                    trg_field=trg_field)
-        build_vocab(src_field=src_field, trg_field=trg_field, train_set=train_set, min_freq=MIN_FREQ, max_vocab_size=MAX_VOCAB_SIZE)
-        # Check vocabulary 
-        print(varname, len(src_field.vocab), len(trg_field.vocab))
+train_a_model = True
+if train_a_model:
+    for filename in os.listdir("actual_train"):
+        for ws_use in ws_range:
+            varname = filename.replace("actual_train_", "")
 
-        train_loader = build_bucket_iterator(dataset=train_set, batch_size=BATCH_SIZE, device=DEVICE)
-        val_loader = build_bucket_iterator(dataset=val_set, batch_size=BATCH_SIZE, device=DEVICE)
-        test_loader = build_bucket_iterator(dataset=test_set, batch_size=BATCH_SIZE, device=DEVICE)
+            src_field, trg_field = build_fields()
+            train_set, val_set, test_set = get_datasets(train_path="tokenized_data/" + varname + "/" + varname + "_train_" + str(ws_use) + ".csv", 
+                                                        val_path="tokenized_data/" + varname + "/" + varname + "_val_" + str(ws_use) + ".csv", 
+                                                        test_path="tokenized_data/" + varname + "/" + varname + "_test_" + str(ws_use) + ".csv",
+                                                        src_field=src_field, 
+                                                        trg_field=trg_field)
 
-        # Safe number of batches in train loader and eval points
-        perc = 0.25
-        n_batches_train = len(train_loader)
-        eval_points = [
-            round(i * perc * n_batches_train) - 1 for i in range(1, round(1 / perc))
-        ]
-        eval_points.append(n_batches_train - 1)
+            build_vocab(src_field=src_field, trg_field=trg_field, train_set=train_set, min_freq=MIN_FREQ, max_vocab_size=MAX_VOCAB_SIZE)
+            # Check vocabulary 
+            print(varname, len(src_field.vocab), len(trg_field.vocab))
 
-        # Get padding/<sos> idxs
-        src_pad_idx = src_field.vocab.stoi["<pad>"]
-        trg_pad_idx = trg_field.vocab.stoi["<pad>"]
-        seq_beginning_token_idx = src_field.vocab.stoi["<sos>"]
-        assert src_field.vocab.stoi["<sos>"] == trg_field.vocab.stoi["<sos>"]
+            train_loader = build_bucket_iterator(dataset=train_set, batch_size=BATCH_SIZE, device=DEVICE)
+            val_loader = build_bucket_iterator(dataset=val_set, batch_size=BATCH_SIZE, device=DEVICE)
+            test_loader = build_bucket_iterator(dataset=test_set, batch_size=BATCH_SIZE, device=DEVICE)
 
-        # Init model wrapper class
-        model = Seq2Seq_With_Attention(
-            lr=LR,
-            enc_vocab_size=len(src_field.vocab),
-            vocab_size_trg=len(trg_field.vocab),
-            enc_emb_dim=ENC_EMB_DIM,
-            hidden_dim_enc=HIDDEN_DIM_ENC,
-            hidden_dim_dec=HIDDEN_DIM_DEC,
-            dropout=DROPOUT,
-            padding_idx=src_pad_idx,
-            num_layers_enc=NUM_LAYERS_ENC,
-            num_layers_dec=NUM_LAYERS_DEC,
-            emb_dim_trg=EMB_DIM_TRG,
-            trg_pad_idx=trg_pad_idx,
-            device=DEVICE,
-            seq_beginning_token_idx=seq_beginning_token_idx,
-            train_attention=TRAIN_ATTENTION,
-        )
+            # Safe number of batches in train loader and eval points
+            perc = 0.25
+            n_batches_train = len(train_loader)
+            eval_points = [
+                round(i * perc * n_batches_train) - 1 for i in range(1, round(1 / perc))
+            ]
+            eval_points.append(n_batches_train - 1)
 
-        # Send model to device
-        model.send_to_device()
+            # Get padding/<sos> idxs
+            src_pad_idx = src_field.vocab.stoi["<pad>"]
+            trg_pad_idx = trg_field.vocab.stoi["<pad>"]
+            seq_beginning_token_idx = src_field.vocab.stoi["<sos>"]
+            assert src_field.vocab.stoi["<sos>"] == trg_field.vocab.stoi["<sos>"]
 
-        train_losses = []
-        val_losses = []
+            # Init model wrapper class
+            model = Seq2Seq_With_Attention(
+                lr=LR,
+                enc_vocab_size=len(src_field.vocab),
+                vocab_size_trg=len(trg_field.vocab),
+                enc_emb_dim=ENC_EMB_DIM,
+                hidden_dim_enc=HIDDEN_DIM_ENC,
+                hidden_dim_dec=HIDDEN_DIM_DEC,
+                dropout=DROPOUT,
+                padding_idx=src_pad_idx,
+                num_layers_enc=NUM_LAYERS_ENC,
+                num_layers_dec=NUM_LAYERS_DEC,
+                emb_dim_trg=EMB_DIM_TRG,
+                trg_pad_idx=trg_pad_idx,
+                device=DEVICE,
+                seq_beginning_token_idx=seq_beginning_token_idx,
+                train_attention=TRAIN_ATTENTION,
+            )
 
-        for epoch in range(EPOCHS):
+            # Send model to device
+            model.send_to_device()
 
-            now = time()
+            train_losses = []
+            val_losses = []
 
-            # Init loss stats for epoch
-            train_loss = 0
+            for epoch in range(EPOCHS):
 
-            n_batches_since_eval = 0
+                now = time()
 
-            for n_batch, train_batch in enumerate(
-                tqdm(
-                    train_loader,
-                    desc=f"Epoch {epoch}",
-                    unit="batch",
-                    disable=disable_pro_bar,
-                )
-            ):
+                # Init loss stats for epoch
+                train_loss = 0
 
-                model.seq2seq.train()
+                n_batches_since_eval = 0
 
-                # Take one gradient step
-                train_loss += model.train_step(
-                    src_batch=train_batch.src[0],
-                    trg_batch=train_batch.trg,
-                    src_lens=train_batch.src[1],
-                    teacher_forcing=TEACHER_FORCING,
-                )
-
-                n_batches_since_eval += 1
-
-                # Calculate and safe train/eval losses at 25% of epoch
-                if n_batch in eval_points:
-    
-                    now_eval = time()
-
-                    # Evaluate
-                    eval_loss = evaluate(model=model, eval_loader=val_loader)
-
-                    print(f"Evaluation time: {(time()-now_eval)/60:.2f} minutes.")
-
-                    # Save mean train/val loss
-                    train_losses.append(train_loss / n_batches_since_eval)
-                    val_losses.append(eval_loss)
-
-                    # Set counter to 0 again
-                    n_batches_since_eval = 0
-                    train_loss = 0
-
-                    print(
-                        f"Epoch {epoch} [{round(n_batch*100/n_batches_train)}%]: Train loss [{train_losses[-1]}]   |  Val loss [{eval_loss}]\n"
+                for n_batch, train_batch in enumerate(
+                    tqdm(
+                        train_loader,
+                        desc=f"Epoch {epoch}",
+                        unit="batch",
+                        disable=disable_pro_bar,
                     )
-                    print("##########################################\n")
+                ):
 
-            print(f"Epoch Training time: {(time()-now)/60:.2f} minutes.")
+                    model.seq2seq.train()
 
-        model_name = "GRU_Att"
-        if not os.path.isdir("train_attention" + str(ws_use - min(ws_range) + 5 + 2 * len(ws_range)) + "/" + varname + "/models/" + model_name):
-            os.makedirs("train_attention" + str(ws_use - min(ws_range) + 5 + 2 * len(ws_range)) + "/" + varname + "/models/" + model_name)
+                    # Take one gradient step
+                    train_loss += model.train_step(
+                        src_batch=train_batch.src[0],
+                        trg_batch=train_batch.trg,
+                        src_lens=train_batch.src[1],
+                        teacher_forcing=TEACHER_FORCING,
+                    )
 
-        if not os.path.isdir("train_attention" + str(ws_use - min(ws_range) + 5 + 2 * len(ws_range)) + "/" + varname + "/predictions/train/" + model_name):
-            os.makedirs("train_attention" + str(ws_use - min(ws_range) + 5 + 2 * len(ws_range)) + "/" + varname + "/predictions/train/" + model_name)
-    
-        if not os.path.isdir("train_attention" + str(ws_use - min(ws_range) + 5 + 2 * len(ws_range)) + "/" + varname + "/predictions/test/" + model_name):
-            os.makedirs("train_attention" + str(ws_use - min(ws_range) + 5 + 2 * len(ws_range)) + "/" + varname + "/predictions/test/" + model_name)
-    
-        if not os.path.isdir("train_attention" + str(ws_use - min(ws_range) + 5 + 2 * len(ws_range)) + "/" + varname + "/predictions/val/" + model_name):
-            os.makedirs("train_attention" + str(ws_use - min(ws_range) + 5 + 2 * len(ws_range)) + "/" + varname + "/predictions/val/" + model_name)
+                    n_batches_since_eval += 1
+
+                    # Calculate and safe train/eval losses at 25% of epoch
+                    if n_batch in eval_points:
         
-        save_object("train_attention" + str(ws_use - min(ws_range) + 5 + 2 * len(ws_range)) + "/" + varname + "/models/" + model_name + "/" + varname + "_" + model_name + "_ws_" + str(ws_use) + "_train_losses", train_losses)
+                        now_eval = time()
 
-        save_object("train_attention" + str(ws_use - min(ws_range) + 5 + 2 * len(ws_range)) + "/" + varname + "/models/" + model_name + "/" + varname + "_" + model_name + "_ws_" + str(ws_use) + "_val_losses", val_losses)
+                        # Evaluate
+                        eval_loss = evaluate(model=model, eval_loader=val_loader)
 
-        model.seq2seq.eval()
-        torch.save(model.seq2seq.state_dict(), "train_attention" + str(ws_use - min(ws_range) + 5 + 2 * len(ws_range)) + "/" + varname + "/models/" + model_name + "/" + varname + "_" + model_name + "_ws_" + str(ws_use) + ".pth")
+                        print(f"Evaluation time: {(time()-now_eval)/60:.2f} minutes.")
 
-        with torch.no_grad():
+                        # Save mean train/val loss
+                        train_losses.append(train_loss / n_batches_since_eval)
+                        val_losses.append(eval_loss)
 
-            y_train_all = []
-            predict_train_all = []
-            pd_train = pd.read_csv("tokenized_data/" + varname + "/" + varname + "_train_" + str(ws_use) + ".csv", sep = ">")
-            for i, ex in enumerate(list(pd_train["x"])):
-                translation, _, _, _ = translate_sentence(
-                    sentence=str(ex),
-                    seq2seq_model=model.seq2seq,
-                    src_field=src_field,
-                    bos=src_field.init_token,
-                    eos=src_field.eos_token,
-                    eos_idx=src_field.vocab.stoi[src_field.eos_token],
-                    trg_field=trg_field,
-                    max_len=30,
-                )
-                y_train_all.append([str(ex)]) 
-                predict_train_all.append([translation]) 
-            print_predictions(y_train_all, predict_train_all, "train_attention" + str(ws_use - min(ws_range) + 5 + 2 * len(ws_range)) + "/" + varname + "/predictions/train/" + model_name + "/" + varname + "_" + model_name + "_ws_" + str(ws_use) + "_train.csv") 
+                        # Set counter to 0 again
+                        n_batches_since_eval = 0
+                        train_loss = 0
+
+                        print(
+                            f"Epoch {epoch} [{round(n_batch*100/n_batches_train)}%]: Train loss [{train_losses[-1]}]   |  Val loss [{eval_loss}]\n"
+                        )
+                        print("##########################################\n")
+
+                print(f"Epoch Training time: {(time()-now)/60:.2f} minutes.")
+
+            if not os.path.isdir("train_attention" + str(ws_use - min(ws_range) + 1 + len(ws_range) * 2) + "/" + varname + "/models/" + model_name):
+                os.makedirs("train_attention" + str(ws_use - min(ws_range) + 1 + len(ws_range) * 2) + "/" + varname + "/models/" + model_name)
+
+            if not os.path.isdir("train_attention" + str(ws_use - min(ws_range) + 1 + len(ws_range) * 2) + "/" + varname + "/predictions/test/" + model_name):
+                os.makedirs("train_attention" + str(ws_use - min(ws_range) + 1 + len(ws_range) * 2) + "/" + varname + "/predictions/test/" + model_name)
+        
+            save_object("train_attention" + str(ws_use - min(ws_range) + 1 + len(ws_range) * 2) + "/" + varname + "/models/" + model_name + "/" + varname + "_" + model_name + "_ws_" + str(ws_use) + "_train_losses", train_losses)
+
+            save_object("train_attention" + str(ws_use - min(ws_range) + 1 + len(ws_range) * 2) + "/" + varname + "/models/" + model_name + "/" + varname + "_" + model_name + "_ws_" + str(ws_use) + "_val_losses", val_losses)
             
-            y_val_all = []
-            predict_val_all = []
-            pd_val = pd.read_csv("tokenized_data/" + varname + "/" + varname + "_val_" + str(ws_use) + ".csv", sep = ">")
-            for i, ex in enumerate(list(pd_val["x"])):
-                translation, _, _, _ = translate_sentence(
-                    sentence=str(ex),
-                    seq2seq_model=model.seq2seq,
-                    src_field=src_field,
-                    bos=src_field.init_token,
-                    eos=src_field.eos_token,
-                    eos_idx=src_field.vocab.stoi[src_field.eos_token],
-                    trg_field=trg_field,
-                    max_len=30,
-                )
-                y_val_all.append([str(ex)]) 
-                predict_val_all.append([translation]) 
-            print_predictions(y_val_all, predict_val_all, "train_attention" + str(ws_use - min(ws_range) + 5 + 2 * len(ws_range)) + "/" + varname + "/predictions/val/" + model_name + "/" + varname + "_" + model_name + "_ws_" + str(ws_use) + "_val.csv")     
-    
-            y_test_all = []
-            predict_test_all = []
-            pd_test = pd.read_csv("tokenized_data/" + varname + "/" + varname + "_test_" + str(ws_use) + ".csv", sep = ">")
-            for i, ex in enumerate(list(pd_test["x"])):
-                translation, _, _, _ = translate_sentence(
-                    sentence=str(ex),
-                    seq2seq_model=model.seq2seq,
-                    src_field=src_field,
-                    bos=src_field.init_token,
-                    eos=src_field.eos_token,
-                    eos_idx=src_field.vocab.stoi[src_field.eos_token],
-                    trg_field=trg_field,
-                    max_len=30,
-                )
-                y_test_all.append([str(ex)]) 
-                predict_test_all.append([translation]) 
-            print_predictions(y_test_all, predict_test_all, "train_attention" + str(ws_use - min(ws_range) + 5 + 2 * len(ws_range)) + "/" + varname + "/predictions/test/" + model_name + "/" + varname + "_" + model_name + "_ws_" + str(ws_use) + "_test.csv")
+            model.seq2seq.eval()
+            torch.save(model.seq2seq.state_dict(), "train_attention" + str(ws_use - min(ws_range) + 1 + len(ws_range) * 2) + "/" + varname + "/models/" + model_name + "/" + varname + "_" + model_name + "_ws_" + str(ws_use) + ".pth")
+            
+            with torch.no_grad():
+
+                y_test_all = []
+                predict_test_all = []
+                pd_test = pd.read_csv("tokenized_data/" + varname + "/" + varname + "_test_short_" + str(ws_use) + ".csv", sep = ">")
+                list_x = list(pd_test["x"])
+                list_y = list(pd_test["y"])
+                for i in range(len(list_x)):
+                    translation, _, _, _ = translate_sentence(
+                        sentence=str(list_x[i]),
+                        seq2seq_model=model.seq2seq,
+                        src_field=src_field,
+                        bos=src_field.init_token,
+                        eos=src_field.eos_token,
+                        eos_idx=src_field.vocab.stoi[src_field.eos_token],
+                        trg_field=trg_field,
+                        max_len=30,
+                    )
+                    y_test_all.append([str(list_y[i])]) 
+                    predict_test_all.append([translation]) 
+                print_predictions(y_test_all, predict_test_all, "train_attention" + str(ws_use - min(ws_range) + 1 + len(ws_range) * 2) + "/" + varname + "/predictions/test/" + model_name + "/" + varname + "_" + model_name + "_ws_" + str(ws_use) + "_test.csv")
+
+test_a_model = False
+if test_a_model:
+    for filename in os.listdir("actual_train"):
+        for ws_use in ws_range:
+            varname = filename.replace("actual_train_", "")
+
+            src_field, trg_field = build_fields()
+            train_set, val_set, test_set = get_datasets(train_path="tokenized_data/" + varname + "/" + varname + "_train_" + str(ws_use) + ".csv", 
+                                                        val_path="tokenized_data/" + varname + "/" + varname + "_val_" + str(ws_use) + ".csv", 
+                                                        test_path="tokenized_data/" + varname + "/" + varname + "_test_" + str(ws_use) + ".csv",
+                                                        src_field=src_field, 
+                                                        trg_field=trg_field)
+
+            build_vocab(src_field=src_field, trg_field=trg_field, train_set=train_set, min_freq=MIN_FREQ, max_vocab_size=MAX_VOCAB_SIZE)
+            # Check vocabulary 
+            print(varname, len(src_field.vocab), len(trg_field.vocab))
+
+            train_loader = build_bucket_iterator(dataset=train_set, batch_size=BATCH_SIZE, device=DEVICE)
+            val_loader = build_bucket_iterator(dataset=val_set, batch_size=BATCH_SIZE, device=DEVICE)
+            test_loader = build_bucket_iterator(dataset=test_set, batch_size=BATCH_SIZE, device=DEVICE)
+
+            # Safe number of batches in train loader and eval points
+            perc = 0.25
+            n_batches_train = len(train_loader)
+            eval_points = [
+                round(i * perc * n_batches_train) - 1 for i in range(1, round(1 / perc))
+            ]
+            eval_points.append(n_batches_train - 1)
+
+            # Get padding/<sos> idxs
+            src_pad_idx = src_field.vocab.stoi["<pad>"]
+            trg_pad_idx = trg_field.vocab.stoi["<pad>"]
+            seq_beginning_token_idx = src_field.vocab.stoi["<sos>"]
+            assert src_field.vocab.stoi["<sos>"] == trg_field.vocab.stoi["<sos>"]
+
+            # Init model wrapper class
+            model = Seq2Seq_With_Attention(
+                lr=LR,
+                enc_vocab_size=len(src_field.vocab),
+                vocab_size_trg=len(trg_field.vocab),
+                enc_emb_dim=ENC_EMB_DIM,
+                hidden_dim_enc=HIDDEN_DIM_ENC,
+                hidden_dim_dec=HIDDEN_DIM_DEC,
+                dropout=DROPOUT,
+                padding_idx=src_pad_idx,
+                num_layers_enc=NUM_LAYERS_ENC,
+                num_layers_dec=NUM_LAYERS_DEC,
+                emb_dim_trg=EMB_DIM_TRG,
+                trg_pad_idx=trg_pad_idx,
+                device=DEVICE,
+                seq_beginning_token_idx=seq_beginning_token_idx,
+                train_attention=TRAIN_ATTENTION,
+            )
+
+            model.seq2seq.load_state_dict(torch.load("train_attention" + str(ws_use - min(ws_range) + 1 + len(ws_range) * 2) + "/" + varname + "/models/" + model_name + "/" + varname + "_" + model_name + "_ws_" + str(ws_use) + ".pth"))
+            
+            model.seq2seq.eval()
+
+            with torch.no_grad():
+
+                y_test_all = []
+                predict_test_all = []
+                pd_test = pd.read_csv("tokenized_data/" + varname + "/" + varname + "_test_short_" + str(ws_use) + ".csv", sep = ">")
+                list_x = list(pd_test["x"])
+                list_y = list(pd_test["y"])
+                for i in range(len(list_x)):
+                    translation, _, _, _ = translate_sentence(
+                        sentence=str(list_x[i]),
+                        seq2seq_model=model.seq2seq,
+                        src_field=src_field,
+                        bos=src_field.init_token,
+                        eos=src_field.eos_token,
+                        eos_idx=src_field.vocab.stoi[src_field.eos_token],
+                        trg_field=trg_field,
+                        max_len=30,
+                    )
+                    y_test_all.append([str(list_y[i])]) 
+                    predict_test_all.append([translation]) 
+                print_predictions(y_test_all, predict_test_all, "train_attention" + str(ws_use - min(ws_range) + 1 + len(ws_range) * 2) + "/" + varname + "/predictions/test/" + model_name + "/" + varname + "_" + model_name + "_ws_" + str(ws_use) + "_test.csv")

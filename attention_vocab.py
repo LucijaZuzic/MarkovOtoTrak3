@@ -14,7 +14,7 @@ MAX_VOCAB_SIZE = 8000
 
 num_props = 1
  
-ws_range = [1] 
+ws_range = range(5, 7) 
 for filename in os.listdir("actual_train"):
     for ws_use in ws_range:
         varname = filename.replace("actual_train_", "")

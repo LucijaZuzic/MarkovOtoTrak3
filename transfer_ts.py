@@ -20,7 +20,7 @@ def get_XY(dat, time_steps, len_skip = -1, len_output = -1):
     Y = np.array(Y)
     return X, Y
 
-ws_range = range(20, 70, 10)
+ws_range = range(1, 7)
 
 for ws_use in ws_range:
     
@@ -63,7 +63,6 @@ for ws_use in ws_range:
             yml_part_var[varname] += "\n  " + v + ": " + str(dictio[v])
         yml_part += "\n"
         yml_part_var[varname] += "\n"
-        continue
         
         together_csv = "date,"
 
