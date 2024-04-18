@@ -15,6 +15,7 @@ for varname in os.listdir("final_train_pytorch"):
     
     print(varname)
     
+    final_test_NRMSE = []
     final_test_RMSE = []
     final_test_R2 = []
     final_test_MAE = []
@@ -48,11 +49,13 @@ for varname in os.listdir("final_train_pytorch"):
                 if is_a_nan:
                     final_test_MAE.append(1000000)
                     final_test_R2.append(1000000)
+                    final_test_NRMSE.append(1000000)
                     final_test_RMSE.append(1000000)
                 else:
                     final_test_MAE.append(mean_absolute_error(final_test_data["actual"], final_test_data["predicted"]))
                     final_test_R2.append(r2_score(final_test_data["actual"], final_test_data["predicted"]))
-                    final_test_RMSE.append(math.sqrt(mean_squared_error(final_test_data["actual"], final_test_data["predicted"])) / (max(all_mine_flat) - min(all_mine_flat)))
+                    final_test_NRMSE.append(math.sqrt(mean_squared_error(final_test_data["actual"], final_test_data["predicted"])) / (max(all_mine_flat) - min(all_mine_flat)))
+                    final_test_RMSE.append(math.sqrt(mean_squared_error(final_test_data["actual"], final_test_data["predicted"])))
     
     for mini_ix_val in range(len(final_test_RMSE)):
-        print(model_arr[mini_ix_val], hidden_arr[mini_ix_val], ws_arr[mini_ix_val], np.round(final_test_RMSE[mini_ix_val] * 100, 2), np.round(final_test_R2[mini_ix_val] * 100, 2), np.round(final_test_MAE[mini_ix_val], 6))
+        print(model_arr[mini_ix_val], hidden_arr[mini_ix_val], ws_arr[mini_ix_val], np.round(final_test_NRMSE[mini_ix_val] * 100, 2), np.round(final_test_R2[mini_ix_val] * 100, 2), np.round(final_test_MAE[mini_ix_val], 6), np.round(final_test_RMSE[mini_ix_val], 6))

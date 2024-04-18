@@ -12,6 +12,7 @@ for varname in os.listdir("train_attention1"):
     
     print(varname)
 
+    final_test_NRMSE = []
     final_test_RMSE = []
     final_test_R2 = []
     final_test_MAE = []
@@ -84,11 +85,12 @@ for varname in os.listdir("train_attention1"):
 
         final_test_MAE.append(mean_absolute_error(final_test_data_actual, final_test_data_predicted))
         final_test_R2.append(r2_score(final_test_data_actual, final_test_data_predicted))
-        final_test_RMSE.append(math.sqrt(mean_squared_error(final_test_data_actual, final_test_data_predicted)) / (max(all_mine_flat) - min(all_mine_flat)))
- 
+        final_test_NRMSE.append(math.sqrt(mean_squared_error(final_test_data_actual, final_test_data_predicted)) / (max(all_mine_flat) - min(all_mine_flat)))
+        final_test_RMSE.append(math.sqrt(mean_squared_error(final_test_data_actual, final_test_data_predicted)))
+
         test_ix.append(test_num)
         unk_arr.append(test_unk / len(final_test_data_predicted))
 
     for mini_ix_val in range(len(final_test_RMSE)):
         ws_use = (test_ix[mini_ix_val] - 1) % len(ws_range) + min(ws_range)
-        print(ws_use, (test_ix[mini_ix_val] - 1) // len(ws_range) + 1, np.round(unk_arr[mini_ix_val] * 100, 4), np.round(final_test_RMSE[mini_ix_val] * 100, 2), np.round(final_test_R2[mini_ix_val] * 100, 2), np.round(final_test_MAE[mini_ix_val], 6))
+        print(ws_use, (test_ix[mini_ix_val] - 1) // len(ws_range) + 1, np.round(unk_arr[mini_ix_val] * 100, 4), np.round(final_test_NRMSE[mini_ix_val] * 100, 2), np.round(final_test_R2[mini_ix_val] * 100, 2), np.round(final_test_MAE[mini_ix_val], 6), np.round(final_test_RMSE[mini_ix_val], 6))

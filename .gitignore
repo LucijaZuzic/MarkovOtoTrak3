@@ -1,3 +1,4 @@
 Vehicle*/*
 *.pyc
 checkpoints/*
+wandb/*

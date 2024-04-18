@@ -1,15 +1,33 @@
 from utilities import load_object
 import os
 import numpy as np
+<<<<<<< HEAD
+import pandas as pd
+import math
+
+def find_nearest(array,value):
+    idx = np.searchsorted(array, value, side="left")
+    if idx > 0 and (idx == len(array) or math.fabs(value - array[idx-1]) < math.fabs(value - array[idx])):
+        return array[idx-1]
+    else:
+        return array[idx]
+    
+ws_range = range(4, 7)
+=======
 from datetime import timedelta, datetime
 import pandas as pd
 
 ws_range = range(5, 7)
+>>>>>>> d2f53e498b3dfa9c78d0df493ed3626c1a4048b9
 
 for ws_use in ws_range:
 
     if not os.path.isdir("csv_data/data_provider/" + str(ws_use)):
         os.makedirs("csv_data/data_provider/" + str(ws_use))
+<<<<<<< HEAD
+
+=======
+>>>>>>> d2f53e498b3dfa9c78d0df493ed3626c1a4048b9
     for filename in os.listdir("actual_train"):
 
         varname = filename.replace("actual_train_", "")
@@ -29,3 +47,31 @@ for ws_use in ws_range:
             if val not in dictio:
                 dictio[val] = []
             dictio[val].append(file_pd_transformed_pred[ix_use])
+<<<<<<< HEAD
+
+        keys_arr = sorted(dictio.keys())
+        dictio_close = dict()
+        for smv in file_pd["OT"]:
+            if smv not in dictio_close: 
+                if smv in dictio:
+                    vu = smv
+                else:
+                    vu = find_nearest(keys_arr, smv)
+                dictio_close[smv] = vu
+ 
+        preds_smv = []
+        actual_smv = [] 
+        for smv in file_pd["OT"]:
+            preds_smv.append(np.average(dictio[dictio_close[smv]]))
+            actual_smv.append(dictio_close[smv])
+
+        if not os.path.isdir("UniTS_final_res/" + str(ws_use)):
+            os.makedirs("UniTS_final_res/" + str(ws_use))
+  
+        df_new = pd.DataFrame({"predicted": preds_smv, "actual": actual_smv})
+
+        df_new.to_csv("UniTS_final_res/" + str(ws_use) + "/" + varname + ".csv", index = False) 
+
+        print(file_pd.columns)
+=======
+>>>>>>> d2f53e498b3dfa9c78d0df493ed3626c1a4048b9
