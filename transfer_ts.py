@@ -20,18 +20,13 @@ def get_XY(dat, time_steps, len_skip = -1, len_output = -1):
     Y = np.array(Y)
     return X, Y
 
-ws_range = range(5, 7)
+ws_range = range(1, 7)
 
 for ws_use in ws_range:
-
-    if not os.path.isdir("csv_data/data_provider/" + str(ws_use)):
-        os.makedirs("csv_data/data_provider/" + str(ws_use))
     
     yml_part = "task_dataset:"
 
     yml_part_var = dict()
-
-    yml_part_var_line = dict()
 
     for filename in os.listdir("actual_train"):
 
@@ -43,9 +38,6 @@ for ws_use in ws_range:
 
         varname = filename.replace("actual_train_", "")
 
-        if not os.path.isdir("csv_data/dataset/" + str(ws_use) + "/" + varname):
-            os.makedirs("csv_data/dataset/" + str(ws_use) + "/" + varname)
-            
         file_object_train = load_object("actual_train/actual_train_" + varname) 
         file_object_val = load_object("actual_val/actual_val_" + varname)
         file_object_test = load_object("actual/actual_" + varname)
@@ -64,11 +56,6 @@ for ws_use in ws_range:
                   "dec_in": ws_use, 
                   "c_out": ws_use}
 
-        yml_part_var_line[varname] = dict()
-        yml_part_var_line[varname]["TRAIN"] = dict()
-        yml_part_var_line[varname]["TEST"] = dict()
-        yml_part_var_line[varname]["VAL"] = dict()
-        
         yml_part += "\n " + str(varname) + ":"
         yml_part_var[varname] += "\n " + str(varname) + ":"
         for v in dictio:
@@ -76,6 +63,7 @@ for ws_use in ws_range:
             yml_part_var[varname] += "\n  " + v + ": " + str(dictio[v])
         yml_part += "\n"
         yml_part_var[varname] += "\n"
+        continue
         
         together_csv = "date,"
 
@@ -94,12 +82,6 @@ for ws_use in ws_range:
             x_train_part, y_train_part = get_XY(file_object_train[k], ws_use, 1, 1)
             
             for ix1 in range(len(x_train_part)):
-
-                yml_part_var_line[varname]["TRAIN"][ix1] = "task_dataset:"
-                yml_part_var_line[varname]["TRAIN"][ix1] += "\n " + str(varname) + ":"
-                for v in dictio:
-                    yml_part_var_line[varname]["TRAIN"][ix1] += "\n  " + v + ": " + str(dictio[v]).replace("TRAIN", "TRAIN_" + str(ix1))
-                yml_part_var_line[varname]["TRAIN"][ix1] += "\n"
                     
                 str_train += datetime.strftime(datetime_use, "%Y-%m-%d %H-%M-%S") + ","
 
@@ -115,21 +97,11 @@ for ws_use in ws_range:
 
                 str_train += "\n" 
 
-                file_all_write_one_train = open("csv_data/dataset/" + str(ws_use) + "/" + varname + "/newdata_TRAIN_" + str(ix1) + ".csv", "w") 
-                file_all_write_one_train.write(together_csv + str_train.split("\n")[-1] + "\n")
-                file_all_write_one_train.close()
-
         for k in file_object_val:
 
             x_val_part, y_val_part = get_XY(file_object_val[k], ws_use, 1, 1)
             
             for ix1 in range(len(x_val_part)):
-
-                yml_part_var_line[varname]["VAL"][ix1] = "task_dataset:"
-                yml_part_var_line[varname]["VAL"][ix1] += "\n " + str(varname) + ":"
-                for v in dictio:
-                    yml_part_var_line[varname]["VAL"][ix1] += "\n  " + v + ": " + str(dictio[v]).replace("TRAIN", "VAL_" + str(ix1))
-                yml_part_var_line[varname]["VAL"][ix1] += "\n"
 
                 str_val += datetime.strftime(datetime_use, "%Y-%m-%d %H-%M-%S") + ","
 
@@ -145,21 +117,11 @@ for ws_use in ws_range:
 
                 str_val += "\n"
 
-                file_all_write_one_val = open("csv_data/dataset/" + str(ws_use) + "/" + varname + "/newdata_VAL_" + str(ix1) + ".csv", "w") 
-                file_all_write_one_val.write(together_csv + str_val.split("\n")[-1] + "\n")
-                file_all_write_one_val.close()
-
         for k in file_object_test:
 
             x_test_part, y_test_part = get_XY(file_object_test[k], ws_use, 1, 1)
             
             for ix1 in range(len(x_test_part)):
-
-                yml_part_var_line[varname]["TEST"][ix1] = "task_dataset:"
-                yml_part_var_line[varname]["TEST"][ix1] += "\n " + str(varname) + ":"
-                for v in dictio:
-                    yml_part_var_line[varname]["TEST"][ix1] += "\n  " + v + ": " + str(dictio[v]).replace("TRAIN", "TEST_" + str(ix1))
-                yml_part_var_line[varname]["TEST"][ix1] += "\n"
 
                 str_test += datetime.strftime(datetime_use, "%Y-%m-%d %H-%M-%S") + ","
 
@@ -173,11 +135,10 @@ for ws_use in ws_range:
 
                 str_test = str_test[:-1]
 
-                str_test += "\n"
-                
-                file_all_write_one_test = open("csv_data/dataset/" + str(ws_use) + "/" + varname + "/newdata_TEST_" + str(ix1) + ".csv", "w") 
-                file_all_write_one_test.write(together_csv + str_test.split("\n")[-1] + "\n")
-                file_all_write_one_test.close()
+                str_test += "\n" 
+
+        if not os.path.isdir("csv_data/dataset/" + str(ws_use) + "/" + varname):
+            os.makedirs("csv_data/dataset/" + str(ws_use) + "/" + varname)
 
         file_train_write = open("csv_data/dataset/" + str(ws_use) + "/" + varname + "/newdata_TRAIN.csv", "w")
         file_train_write.write(together_csv + str_train)
@@ -194,6 +155,9 @@ for ws_use in ws_range:
         file_all_write = open("csv_data/dataset/" + str(ws_use) + "/" + varname + "/newdata_ALL.csv", "w") 
         file_all_write.write(together_csv + str_train + str_val + str_test)
         file_all_write.close()
+    
+    if not os.path.isdir("csv_data/data_provider/" + str(ws_use)):
+        os.makedirs("csv_data/data_provider/" + str(ws_use))
 
     file_yml_pre_write = open("csv_data/data_provider/" + str(ws_use) + "/multi_task_pretrain.yaml", "w")
     file_yml_pre_write.write(yml_part)
@@ -258,22 +222,6 @@ for ws_use in ws_range:
     for filename in os.listdir("actual_train"):
 
         varname = filename.replace("actual_train_", "")
-
-        for some_name in yml_part_var_line[varname]:
-
-            for some_ix in yml_part_var_line[varname][some_name]:
-            
-                file_yml_part_line_var_pre_write = open("csv_data/data_provider/" + str(ws_use) + "/multi_task_pretrain_" + varname + "_" + some_name + "_" + str(some_ix) + ".yaml", "w")
-                file_yml_part_line_var_pre_write.write(yml_part_var_line[varname][some_name][some_ix])
-                file_yml_part_line_var_pre_write.close()
-
-                file_yml_part_line_var_pre_write_s = open("csv_data/data_provider/" + str(ws_use) + "/multi_task_pretrain_" + varname + "_" + some_name + "_" + str(some_ix) + "_S.yaml", "w")
-                file_yml_part_line_var_pre_write_s.write(yml_part_var_line[varname][some_name][some_ix].replace("features: M", "features: S"))
-                file_yml_part_line_var_pre_write_s.close()
-                
-                file_yml_part_line_var_pre_write_ms = open("csv_data/data_provider/" + str(ws_use) + "/multi_task_pretrain_" + varname + "_" + some_name + "_" + str(some_ix) + "_MS.yaml", "w")
-                file_yml_part_line_var_pre_write_ms.write(yml_part_var_line[varname][some_name][some_ix].replace("features: M", "features: MS"))
-                file_yml_part_line_var_pre_write_ms.close()
  
         file_yml_part_var_pre_write = open("csv_data/data_provider/" + str(ws_use) + "/multi_task_pretrain_" + varname + ".yaml", "w")
         file_yml_part_var_pre_write.write(yml_part_var[varname])
