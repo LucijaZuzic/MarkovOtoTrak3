@@ -1,0 +1,1 @@
+{"avg_eval_LF-mse": NaN, "avg_eval_LF-mae": NaN, "avg_eval_CLS-acc": NaN, "avg_eval_IMP-mse": NaN, "avg_eval_IMP-mae": NaN, "avg_eval_Anomaly-f_score": NaN, "_timestamp": 1713431862.662276, "_runtime": 9.59107494354248, "_step": 0, "_wandb": {"runtime": 8}}
