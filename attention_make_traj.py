@@ -45,8 +45,6 @@ for varname in os.listdir("train_attention1"):
     for test_num in range(1, 9):
         ws_use = (test_num - 1) % len(ws_range) + min(ws_range)
 
-        print(test_num) 
-
         predicted_all[varname][model_name][test_num] = dict()
         y_test_all[varname][model_name][test_num] = dict()
         ws_all[varname][model_name][test_num] = dict()
@@ -90,7 +88,6 @@ for varname in os.listdir("train_attention1"):
 
         file_object_test = load_object("actual/actual_" + varname)
 
-        ws_use = int(filename.replace(".csv", "").split("_")[-2])
         ws_all[varname][model_name][test_num] = ws_use
 
         len_total = 0
@@ -164,8 +161,6 @@ for test_num in range(1, 9):
         range_long = len(y_test_all["longitude_no_abs"][model_name][test_num][k]) - long_offset
         range_lat = len(y_test_all["latitude_no_abs"][model_name][test_num][k]) - lat_offset
         min_range_long_lat = min(range_long, range_lat)
-
-        print(len(y_test_all["longitude_no_abs"][model_name][test_num][k]), len(predicted_all["longitude_no_abs"][model_name][test_num][k]), long_offset)
 
         for ix in range(min_range_long_lat):
             predicted_long[model_name][test_num]["long no abs"][k].append(predicted_long[model_name][test_num]["long no abs"][k][-1] + predicted_all["longitude_no_abs"][model_name][test_num][k][ix + long_offset])

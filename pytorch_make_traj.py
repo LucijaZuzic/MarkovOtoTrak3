@@ -24,7 +24,7 @@ ws_all = dict()
 
 ws_range = range(5, 7)
 
-hidden_range = [100]
+hidden_range = [220]
 
 model_list = ["GRU", "LSTM", "RNN"]
 
@@ -52,13 +52,15 @@ for varname in os.listdir("final_train_pytorch"):
                 y_test_all[varname][model_name][ws_use][hidden_use] = dict()
                 ws_all[varname][model_name][ws_use][hidden_use] = dict() 
   
-                final_test_data = pd.read_csv("final_train_pytorch/" + varname + "/predictions/test/" + model_name + "/" + filename, sep = ";", index_col = False)
+                final_test_data = pd.read_csv("final_train_pytorch/" + varname + "/predictions/test/" + model_name + "/" + varname + "_" + model_name + "_ws_" + str(ws_use) + "_hidden_" + str(hidden_use) + "_test.csv", sep = ";", index_col = False)
     
                 file_object_test = load_object("actual/actual_" + varname)
     
                 len_total = 0
 
                 for k in file_object_test:
+                    
+                    ws_all[varname][model_name][ws_use][hidden_use][k] = ws_use
 
                     x_test_part, y_test_part = get_XY(file_object_test[k], ws_use, ws_use, ws_use)
                     
@@ -109,9 +111,9 @@ for model_name in model_list:
                 actual_long[model_name][ws_use][hidden_use][k] = [0]
                 actual_lat[model_name][ws_use][hidden_use][k] = [0]
                 
-                max_offset_long_lat = max(ws_all["longitude_no_abs"][model_name][ws_use][hidden_use], ws_all["latitude_no_abs"][model_name][ws_use][hidden_use])
-                long_offset = max_offset_long_lat - ws_all["longitude_no_abs"][model_name][ws_use][hidden_use]
-                lat_offset = max_offset_long_lat - ws_all["latitude_no_abs"][model_name][ws_use][hidden_use]
+                max_offset_long_lat = max(ws_all["longitude_no_abs"][model_name][ws_use][hidden_use][k], ws_all["latitude_no_abs"][model_name][ws_use][hidden_use][k])
+                long_offset = max_offset_long_lat - ws_all["longitude_no_abs"][model_name][ws_use][hidden_use][k]
+                lat_offset = max_offset_long_lat - ws_all["latitude_no_abs"][model_name][ws_use][hidden_use][k]
                 range_long = len(y_test_all["longitude_no_abs"][model_name][ws_use][hidden_use][k]) - long_offset
                 range_lat = len(y_test_all["latitude_no_abs"][model_name][ws_use][hidden_use][k]) - lat_offset
                 min_range_long_lat = min(range_long, range_lat)
@@ -131,14 +133,12 @@ for model_name in model_list:
                 predicted_long[model_name][ws_use][hidden_use]["long no abs"][k] = [0]
                 predicted_lat[model_name][ws_use][hidden_use]["lat no abs"][k] = [0]
                 
-                max_offset_long_lat = max(ws_all["longitude_no_abs"][model_name][ws_use][hidden_use], ws_all["latitude_no_abs"][model_name][ws_use][hidden_use])
-                long_offset = max_offset_long_lat - ws_all["longitude_no_abs"][model_name][ws_use][hidden_use]
-                lat_offset = max_offset_long_lat - ws_all["latitude_no_abs"][model_name][ws_use][hidden_use]
+                max_offset_long_lat = max(ws_all["longitude_no_abs"][model_name][ws_use][hidden_use][k], ws_all["latitude_no_abs"][model_name][ws_use][hidden_use][k])
+                long_offset = max_offset_long_lat - ws_all["longitude_no_abs"][model_name][ws_use][hidden_use][k]
+                lat_offset = max_offset_long_lat - ws_all["latitude_no_abs"][model_name][ws_use][hidden_use][k]
                 range_long = len(y_test_all["longitude_no_abs"][model_name][ws_use][hidden_use][k]) - long_offset
                 range_lat = len(y_test_all["latitude_no_abs"][model_name][ws_use][hidden_use][k]) - lat_offset
                 min_range_long_lat = min(range_long, range_lat)
-
-                print(len(y_test_all["longitude_no_abs"][model_name][ws_use][hidden_use][k]), len(predicted_all["longitude_no_abs"][model_name][ws_use][hidden_use][k]), long_offset)
 
                 for ix in range(min_range_long_lat):
                     predicted_long[model_name][ws_use][hidden_use]["long no abs"][k].append(predicted_long[model_name][ws_use][hidden_use]["long no abs"][k][-1] + predicted_all["longitude_no_abs"][model_name][ws_use][hidden_use][k][ix + long_offset])
@@ -152,10 +152,10 @@ for model_name in model_list:
                 predicted_long[model_name][ws_use][hidden_use]["long speed dir"][k] = [0]
                 predicted_lat[model_name][ws_use][hidden_use]["lat speed dir"][k] = [0]
             
-                max_offset_speed_dir_time = max(max(ws_all["speed"][model_name][ws_use][hidden_use], ws_all["direction"][model_name][ws_use][hidden_use]), ws_all["time"][model_name][ws_use][hidden_use])
-                speed_offset_time = max_offset_speed_dir_time - ws_all["speed"][model_name][ws_use][hidden_use]
-                dir_offset_time = max_offset_speed_dir_time - ws_all["direction"][model_name][ws_use][hidden_use]
-                time_offset_time = max_offset_speed_dir_time - ws_all["time"][model_name][ws_use][hidden_use]
+                max_offset_speed_dir_time = max(max(ws_all["speed"][model_name][ws_use][hidden_use][k], ws_all["direction"][model_name][ws_use][hidden_use][k]), ws_all["time"][model_name][ws_use][hidden_use][k])
+                speed_offset_time = max_offset_speed_dir_time - ws_all["speed"][model_name][ws_use][hidden_use][k]
+                dir_offset_time = max_offset_speed_dir_time - ws_all["direction"][model_name][ws_use][hidden_use][k]
+                time_offset_time = max_offset_speed_dir_time - ws_all["time"][model_name][ws_use][hidden_use][k]
                 range_speed_time = len(y_test_all["speed"][model_name][ws_use][hidden_use][k]) - speed_offset_time
                 range_dir_time = len(y_test_all["direction"][model_name][ws_use][hidden_use][k]) - dir_offset_time
                 range_time_time = len(y_test_all["time"][model_name][ws_use][hidden_use][k]) - time_offset_time
@@ -174,9 +174,9 @@ for model_name in model_list:
                 predicted_long[model_name][ws_use][hidden_use]["long speed ones dir"][k] = [0]
                 predicted_lat[model_name][ws_use][hidden_use]["lat speed ones dir"][k] = [0]
             
-                max_offset_speed_dir = max(ws_all["speed"][model_name][ws_use][hidden_use], ws_all["direction"][model_name][ws_use][hidden_use])
-                speed_offset = max_offset_speed_dir - ws_all["speed"][model_name][ws_use][hidden_use]
-                dir_offset = max_offset_speed_dir - ws_all["direction"][model_name][ws_use][hidden_use]
+                max_offset_speed_dir = max(ws_all["speed"][model_name][ws_use][hidden_use][k], ws_all["direction"][model_name][ws_use][hidden_use][k])
+                speed_offset = max_offset_speed_dir - ws_all["speed"][model_name][ws_use][hidden_use][k]
+                dir_offset = max_offset_speed_dir - ws_all["direction"][model_name][ws_use][hidden_use][k]
                 range_speed = len(y_test_all["speed"][model_name][ws_use][hidden_use][k]) - speed_offset
                 range_dir = len(y_test_all["direction"][model_name][ws_use][hidden_use][k]) - dir_offset
                 min_range_speed_dir = min(range_speed, range_dir)

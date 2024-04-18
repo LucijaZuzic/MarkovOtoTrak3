@@ -28,8 +28,6 @@ for varname in os.listdir("train_attention1"):
     for test_num in range(1, 9):
         ws_use = (test_num - 1) % len(ws_range) + min(ws_range)
 
-        print(test_num)
- 
         final_test_data = pd.read_csv("train_attention" + str(test_num) + "/" + varname + "/predictions/test/" + model_name + "/" + varname + "_" + model_name + "_ws_" + str(ws_use) + "_test.csv", sep = ";", index_col = False)
         
         final_test_data_predicted = [str(x).strip() for x in final_test_data["predicted"]]
@@ -88,8 +86,9 @@ for varname in os.listdir("train_attention1"):
         final_test_R2.append(r2_score(final_test_data_actual, final_test_data_predicted))
         final_test_RMSE.append(math.sqrt(mean_squared_error(final_test_data_actual, final_test_data_predicted)) / (max(all_mine_flat) - min(all_mine_flat)))
  
-        test_ix.append(ws_use)
+        test_ix.append(test_num)
         unk_arr.append(test_unk / len(final_test_data_predicted))
 
     for mini_ix_val in range(len(final_test_RMSE)):
-        print(test_ix[mini_ix_val], np.round(unk_arr[mini_ix_val] * 100, 2), np.round(final_test_RMSE[mini_ix_val] * 100, 2), np.round(final_test_R2[mini_ix_val] * 100, 2), np.round(final_test_MAE[mini_ix_val], 6))
+        ws_use = (test_ix[mini_ix_val] - 1) % len(ws_range) + min(ws_range)
+        print(ws_use, (test_ix[mini_ix_val] - 1) // len(ws_range) + 1, np.round(unk_arr[mini_ix_val] * 100, 4), np.round(final_test_RMSE[mini_ix_val] * 100, 2), np.round(final_test_R2[mini_ix_val] * 100, 2), np.round(final_test_MAE[mini_ix_val], 6))

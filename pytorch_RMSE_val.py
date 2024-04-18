@@ -7,12 +7,11 @@ import numpy as np
 
 ws_range = range(5, 7)
 
-hidden_range = [100]
+hidden_range = [220]
 
 model_list = ["GRU", "LSTM", "RNN"]
 
-#for varname in os.listdir("final_train_pytorch"):
-for varname in ["direction", "longitude_no_abs", "latitude_no_abs"]:
+for varname in os.listdir("final_train_pytorch"):
     
     print(varname)
     

@@ -148,14 +148,14 @@ for metric in metric_names:
 
                     vals_avg = []
                     
-                    int_veh = sorted([int(k.split("/")[0].split("_")[1]) for k in predicted_long[model_name][dist_name].keys()])
+                    int_veh = sorted([int(k.split("/")[0].split("_")[1]) for k in predicted_long[model_name][ws_use][hidden_use][dist_name].keys()])
 
                     for v in set(int_veh):
 
                         all_actual_vehicle = []
                         all_predicted_vehicle = []
                         
-                        for k in predicted_long[model_name][dist_name]:
+                        for k in predicted_long[model_name][ws_use][hidden_use][dist_name]:
                             veh_new = int(k.split("/")[0].split("_")[1])
                             
                             if veh_new != v:
@@ -202,7 +202,7 @@ for metric in metric_names:
                             vehicle = split_file_veh[0].replace("Vehicle_", "")
                             ride = split_file_veh[-1].replace("events_", "").replace(".csv", "")
 
-                            filename = "mosaic_pytorch_all/Vehicle_" + vehicle + "_events_" + ride + "_" + model_name + "_" + ws_use + "_" + hidden_use + "_" + dist_name + "_" + dist_name.replace("long", "lat") + "_test_mosaic.png"
+                            filename = "mosaic_pytorch_all/Vehicle_" + vehicle + "_events_" + ride + "_" + model_name + "_" + str(ws_use) + "_" + str(hidden_use) + "_" + dist_name + "_" + dist_name.replace("long", "lat") + "_test_mosaic.png"
 
                             draw_mosaic_one(actual_long_one, actual_lat_one, predicted_long_one, predicted_lat_one, k, model_name, filename, ws_use, hidden_use, dist_name)
 
@@ -222,19 +222,19 @@ for metric in metric_names:
                                 predicted_long_lat.append([predicted_long_one[ix_use_len], predicted_lat_one[ix_use_len]])
                                 predicted_long_lat_time.append([predicted_long_one[ix_use_len], predicted_lat_one[ix_use_len], time_predicted_cumulative[ix_use_len]])
 
-                        filename_veh = "mosaic_pytorch/Vehicle_" + str(v) + "_" + model_name + "_" + ws_use + "_" + hidden_use + "_" + dist_name.replace("long", "lat") + "_test_mosaic.png"
+                        filename_veh = "mosaic_pytorch/Vehicle_" + str(v) + "_" + model_name + "_" + str(ws_use) + "_" + str(hidden_use) + "_" + dist_name.replace("long", "lat") + "_test_mosaic.png"
                         draw_mosaic(all_actual_vehicle, all_predicted, filename_veh)
 
-                    filename = "mosaic_pytorch/all_" + model_name + "_" + ws_use + "_" + hidden_use + "_" + dist_name.replace("long", "lat") + "_test_mosaic.png"
+                    filename = "mosaic_pytorch/all_" + model_name + "_" + str(ws_use) + "_" + str(hidden_use) + "_" + dist_name.replace("long", "lat") + "_test_mosaic.png"
                     draw_mosaic(all_actual, all_predicted, filename)
 
-                    print(model_name + "_" + ws_use + "_" + hidden_use + "_" + dist_name, np.round(np.average(vals_avg), 2))
+                    print(model_name + "_" + str(ws_use) + "_" + str(hidden_use) + "_" + dist_name, np.round(np.average(vals_avg), 2))
 
                     r2_pred_wt = r2_score(actual_long_lat_time, predicted_long_lat_time)
             
                     mae_pred = mean_absolute_error(actual_long_lat, predicted_long_lat)
 
                     print("R2", np.round(r2_pred_wt * 100, 2))
-                    print("MAE", np.round(mae_pred, 2))
+                    print("MAE", np.round(mae_pred, 6))
 
 save_object("pytorch_result/distance_predicted_new", distance_predicted_new)

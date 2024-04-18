@@ -88,7 +88,7 @@ def draw_mosaic_one(x_actual, y_actual, x_predicted, y_predicted, k, model_name,
 
     ws_use = (test_num - 1) % len(ws_range) + min(ws_range)
 
-    title_new = "Vehicle " + vehicle + " Ride " + ride + "\n" + model_name + " model\n" + "Window size " + str(ws_use) + "\n" + "Experiment number " + str(test_num // 4 + 1) + "\n" 
+    title_new = "Vehicle " + vehicle + " Ride " + ride + "\n" + model_name + " model\n" + "Window size " + str(ws_use) + "\n" + "Experiment number " + str((test_num - 1) // len(ws_range) + 1) + "\n" 
 
     title_new += translate_category(dist_name) + "\n" 
     for metric in distance_predicted_new:
@@ -146,14 +146,14 @@ for metric in metric_names:
 
                 vals_avg = []
                 
-                int_veh = sorted([int(k.split("/")[0].split("_")[1]) for k in predicted_long[model_name][dist_name].keys()])
+                int_veh = sorted([int(k.split("/")[0].split("_")[1]) for k in predicted_long[model_name][test_num][dist_name].keys()])
 
                 for v in set(int_veh):
 
                     all_actual_vehicle = []
                     all_predicted_vehicle = []
                     
-                    for k in predicted_long[model_name][dist_name]:
+                    for k in predicted_long[model_name][test_num][dist_name]:
                         veh_new = int(k.split("/")[0].split("_")[1])
                         
                         if veh_new != v:
@@ -200,7 +200,7 @@ for metric in metric_names:
                         vehicle = split_file_veh[0].replace("Vehicle_", "")
                         ride = split_file_veh[-1].replace("events_", "").replace(".csv", "")
 
-                        filename = "mosaic_attention_all/Vehicle_" + vehicle + "_events_" + ride + "_" + model_name + "_" + test_num + "_" + dist_name + "_" + dist_name.replace("long", "lat") + "_test_mosaic.png"
+                        filename = "mosaic_attention_all/Vehicle_" + vehicle + "_events_" + ride + "_" + model_name + "_" + str(test_num) + "_" + dist_name + "_" + dist_name.replace("long", "lat") + "_test_mosaic.png"
 
                         draw_mosaic_one(actual_long_one, actual_lat_one, predicted_long_one, predicted_lat_one, k, model_name, filename, test_num, dist_name)
 
@@ -220,19 +220,19 @@ for metric in metric_names:
                             predicted_long_lat.append([predicted_long_one[ix_use_len], predicted_lat_one[ix_use_len]])
                             predicted_long_lat_time.append([predicted_long_one[ix_use_len], predicted_lat_one[ix_use_len], time_predicted_cumulative[ix_use_len]])
 
-                    filename_veh = "mosaic_attention/Vehicle_" + str(v) + "_" + model_name + "_" + test_num + "_" + dist_name.replace("long", "lat") + "_test_mosaic.png"
+                    filename_veh = "mosaic_attention/Vehicle_" + str(v) + "_" + model_name + "_" + str(test_num) + "_" + dist_name.replace("long", "lat") + "_test_mosaic.png"
                     draw_mosaic(all_actual_vehicle, all_predicted, filename_veh)
 
-                filename = "mosaic_attention/all_" + model_name + "_" + test_num + "_" + dist_name.replace("long", "lat") + "_test_mosaic.png"
+                filename = "mosaic_attention/all_" + model_name + "_" + str(test_num) + "_" + dist_name.replace("long", "lat") + "_test_mosaic.png"
                 draw_mosaic(all_actual, all_predicted, filename)
 
-                print(model_name + "_" + test_num + "_" + dist_name, np.round(np.average(vals_avg), 2))
+                print(model_name + "_" + str(test_num) + "_" + dist_name, np.round(np.average(vals_avg), 2))
 
                 r2_pred_wt = r2_score(actual_long_lat_time, predicted_long_lat_time)
         
                 mae_pred = mean_absolute_error(actual_long_lat, predicted_long_lat)
 
                 print("R2", np.round(r2_pred_wt * 100, 2))
-                print("MAE", np.round(mae_pred, 2))
+                print("MAE", np.round(mae_pred, 6))
 
 save_object("attention_result/distance_predicted_new", distance_predicted_new)
