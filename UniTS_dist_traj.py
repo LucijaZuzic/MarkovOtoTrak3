@@ -119,7 +119,7 @@ if not os.path.isdir("mosaic_UniTS"):
 if not os.path.isdir("mosaic_UniTS_all"):
     os.makedirs("mosaic_UniTS_all")
 
-use_draw = True
+use_draw = False
 for metric in metric_names:
 
     distance_predicted_new[metric] = dict()
@@ -147,6 +147,11 @@ for metric in metric_names:
                 vals_avg = []
                 
                 int_veh = sorted([int(k.split("/")[0].split("_")[1]) for k in predicted_long[model_name][ws_use][dist_name].keys()])
+
+                min_k = ""
+                min_dist = 1000000
+                max_k = ""
+                max_dist = - 1000000
 
                 for v in set(int_veh):
 
@@ -196,6 +201,14 @@ for metric in metric_names:
 
                         distance_predicted_new[metric][model_name][ws_use][dist_name][k] = compare_traj_and_sample(actual_long_one, actual_lat_one, time_actual_cumulative, {"long": predicted_long_one, "lat": predicted_lat_one, "time": time_predicted_cumulative}, metric)
                         
+                        if distance_predicted_new[metric][model_name][ws_use][dist_name][k] < min_dist:
+                            min_k = k
+                            min_dist = distance_predicted_new[metric][model_name][ws_use][dist_name][k]
+
+                        if distance_predicted_new[metric][model_name][ws_use][dist_name][k] > max_dist:
+                            max_k = k
+                            max_dist = distance_predicted_new[metric][model_name][ws_use][dist_name][k]
+
                         split_file_veh = k.split("/")
                         vehicle = split_file_veh[0].replace("Vehicle_", "")
                         ride = split_file_veh[-1].replace("events_", "").replace(".csv", "")
@@ -232,6 +245,9 @@ for metric in metric_names:
                     draw_mosaic(all_actual, all_predicted, filename)
 
                 print(model_name + "_" + str(ws_use) + "_" + dist_name, np.round(np.average(vals_avg), 6))
+
+                print(min_k, min_dist)
+                print(max_k, max_dist)
 
                 r2_pred_wt = r2_score(actual_long_lat_time, predicted_long_lat_time)
 
