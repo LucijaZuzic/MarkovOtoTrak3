@@ -120,7 +120,6 @@ if not os.path.isdir("mosaic_UniTS_all"):
     os.makedirs("mosaic_UniTS_all")
 
 use_draw = True
-
 for metric in metric_names:
 
     distance_predicted_new[metric] = dict()

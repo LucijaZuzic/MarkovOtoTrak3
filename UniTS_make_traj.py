@@ -51,8 +51,8 @@ for varname in os.listdir("final_train_pytorch"):
         for k in file_object_test:
             
             ws_all[varname][model_name][ws_use][k] = ws_use
-
-            x_test_part, y_test_part = get_XY(file_object_test[k], ws_use, ws_use, ws_use)
+            
+            x_test_part, y_test_part = get_XY(file_object_test[k], ws_use, 1, 1)
             
             y_test_all[varname][model_name][ws_use][k] = []
             for ix1 in range(len(y_test_part)): 
