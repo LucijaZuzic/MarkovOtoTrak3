@@ -97,10 +97,21 @@ for varname in os.listdir("train_attention1"):
                         value_ix = value_ix.replace("  ", " ")
 
                     for vx in value_ix.split(" "):
-                        
-                        final_test_data_actual_new.append(vx)
+                         
+                        final_test_data_actual_new.append(float(vx)) 
 
                 final_test_data_actual = final_test_data_actual_new
+                
+                test_unk = 0
+                for i in range(len(final_test_data_predicted)):
+                    if str(final_test_data_predicted[i]) == '<unk>' or str(final_test_data_predicted[i]) == 'n.n':
+                        test_unk += 1
+                        if i > 0:
+                            final_test_data_predicted[i] = final_test_data_predicted[i - 1]
+                        else:
+                            final_test_data_predicted[i] = 0
+                    else:
+                        final_test_data_predicted[i] = float(final_test_data_predicted[i])
                 
                 file_object_test = load_object("actual/actual_" + varname)
 
@@ -121,16 +132,22 @@ for varname in os.listdir("train_attention1"):
 
                     predicted_all[varname][test_num][model_name][k] = list(final_test_data_predicted[len_total:len_total + len(y_test_all[varname][test_num][model_name][k])])
                     actual_all[varname][test_num][model_name][k] = list(final_test_data_actual[len_total:len_total + len(y_test_all[varname][test_num][model_name][k])])
+                    len_total += len(y_test_all[varname][test_num][model_name][k])
 
                     bleu_params = dict(effective_order=True, tokenize=None, smooth_method="floor", smooth_value=0.01)
                     bleu = BLEU(**bleu_params)
                     pred_str = ""
                     actual_str = "" 
+                    round_val = 10
+                    if "dir" in varname or "speed" in varname:
+                        round_val = 0
+                    if "time" in varname:
+                        round_val = 3
                     for val_ix in range(len(predicted_all[varname][test_num][model_name][k])):
-                        pred_str += str(predicted_all[varname][test_num][model_name][k]) + " "
-                        actual_str += str(actual_all[varname][test_num][model_name][k]) + " "
+                        pred_str += str(np.round(float(predicted_all[varname][test_num][model_name][k][val_ix]), round_val)) + " "
+                        actual_str += str(np.round(float(actual_all[varname][test_num][model_name][k][val_ix]), round_val)) + " "
                     pred_str = pred_str[:-1]
-                    actual_str = actual_str[:-1] 
+                    actual_str = actual_str[:-1]
                     blsc = bleu.sentence_score(hypothesis=pred_str, references=[actual_str]).score
                     BLEU_all[varname][test_num][model_name].append(blsc)
                     print(varname, model_name, k, BLEU_all[varname][test_num][model_name][-1])

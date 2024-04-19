@@ -68,11 +68,16 @@ for varname in os.listdir("final_train_pytorch"):
                     bleu = BLEU(**bleu_params)
                     pred_str = ""
                     actual_str = "" 
+                    round_val = 10
+                    if "dir" in varname or "speed" in varname:
+                        round_val = 0
+                    if "time" in varname:
+                        round_val = 3
                     for val_ix in range(len(predicted_all[varname][model_name][ws_use][hidden_use][k])):
-                        pred_str += str(predicted_all[varname][model_name][ws_use][hidden_use][k]) + " "
-                        actual_str += str(y_test_all[varname][model_name][ws_use][hidden_use][k]) + " "
+                        pred_str += str(np.round(float(predicted_all[varname][model_name][ws_use][hidden_use][k][val_ix]), round_val)) + " "
+                        actual_str += str(np.round(float(y_test_all[varname][model_name][ws_use][hidden_use][k][val_ix]), round_val)) + " "
                     pred_str = pred_str[:-1]
-                    actual_str = actual_str[:-1] 
+                    actual_str = actual_str[:-1]
                     blsc = bleu.sentence_score(hypothesis=pred_str, references=[actual_str]).score
                     BLEU_all[varname][model_name][ws_use][hidden_use].append(blsc)
                     print(varname, model_name, k, BLEU_all[varname][model_name][ws_use][hidden_use][-1])
