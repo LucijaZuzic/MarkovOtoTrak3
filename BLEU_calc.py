@@ -1,9 +1,8 @@
 import pandas as pd
 import os  
-from utilities import load_object , save_object
+from utilities import load_object, save_object
 from sacrebleu.metrics import BLEU
-import math
-from sklearn.metrics import mean_squared_error, r2_score, mean_absolute_error
+import numpy as np
 
 def get_XY(dat, time_steps, len_skip = -1, len_output = -1):
     X = []
@@ -22,8 +21,6 @@ def get_XY(dat, time_steps, len_skip = -1, len_output = -1):
     Y = np.array(Y)
     return X, Y
 
-import numpy as np
-
 predicted_all = dict()
 actual_all = dict()
 y_test_all = dict()
@@ -35,18 +32,7 @@ model_name = "GRU_Att"
 for varname in os.listdir("train_attention1"):
     
     print(varname)
-
-    final_test_RMSE = []
-    final_test_R2 = []
-    final_test_MAE = []
-    test_ix = []
     
-    all_mine = load_object("actual/actual_" + varname)
-    all_mine_flat = []
-    for filename in all_mine: 
-        for val in all_mine[filename]:
-            all_mine_flat.append(val)
-
     predicted_all[varname] = dict()
     actual_all[varname] = dict()
     y_test_all[varname] = dict()
@@ -74,7 +60,10 @@ for varname in os.listdir("train_attention1"):
             for filename in os.listdir("train_attention" + str(test_num) + "/" + varname + "/predictions/test/" + model_name):
     
                 final_test_data = pd.read_csv("train_attention" + str(test_num) + "/" + varname + "/predictions/test/" + model_name + "/" + filename, sep = ";", index_col = False)
-    
+                
+                final_test_data_predicted = [str(x).strip() for x in final_test_data["predicted"]]
+                final_test_data_actual = [str(x).strip() for x in final_test_data["actual"]]
+
                 final_test_data_predicted_new = []
 
                 for ix_x in range(len(final_test_data_predicted)):
@@ -146,7 +135,7 @@ for varname in os.listdir("train_attention1"):
                     BLEU_all[varname][test_num][model_name].append(blsc)
                     print(varname, model_name, k, BLEU_all[varname][test_num][model_name][-1])
                     save_object("attention_result/BLEU_all", BLEU_all) 
-            print(varname, model_name, np.mean(BLEU_all[varname][test_num][model_name]))
+            print(varname, test_num, model_name, np.mean(BLEU_all[varname][test_num][model_name]))
 
 for varname in BLEU_all:
     
