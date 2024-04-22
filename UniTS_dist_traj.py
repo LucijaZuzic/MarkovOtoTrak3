@@ -87,7 +87,7 @@ def draw_mosaic_one(x_actual, y_actual, x_predicted, y_predicted, k, model_name,
     vehicle = split_file_veh[0].replace("Vehicle_", "")
     ride = split_file_veh[-1].replace("events_", "").replace(".csv", "")
   
-    title_new = "Vehicle " + vehicle + " Ride " + ride + "\n" + model_name + " model\n" + "Window size " + str(ws_use) + "\n"
+    title_new = "Vehicle " + vehicle + " Ride " + ride + "\n" + model_name + " model\n" + "Window size " + str(ws_use + 1) + "\n"
 
     title_new += translate_category(dist_name) + "\n" 
     for metric in distance_predicted_new:
@@ -119,7 +119,7 @@ if not os.path.isdir("mosaic_UniTS"):
 if not os.path.isdir("mosaic_UniTS_all"):
     os.makedirs("mosaic_UniTS_all")
 
-use_draw = False
+use_draw = True
 for metric in metric_names:
 
     distance_predicted_new[metric] = dict()
