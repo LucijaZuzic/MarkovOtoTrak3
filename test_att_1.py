@@ -71,7 +71,7 @@ ws_range = [20, 30]
 marking_for_range = {2: 9, 10: 10, 20: 11, 30: 12}
 model_name = "GRU_Att"
 
-resave = True
+resave = False
 if resave:
     for filename in os.listdir("actual_train"):
 
