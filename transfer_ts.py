@@ -2,6 +2,7 @@ from utilities import load_object
 import os
 import numpy as np
 from datetime import timedelta, datetime
+import pandas as pd
 
 def get_XY(dat, time_steps, len_skip = -1, len_output = -1):
     X = []
@@ -63,18 +64,27 @@ for ws_use in ws_range:
             yml_part_var[varname] += "\n  " + v + ": " + str(dictio[v])
         yml_part += "\n"
         yml_part_var[varname] += "\n"
-        
-        together_csv = "date,"
+         
+        str_train = {"date": []}
+        str_val = {"date": []}
+        str_test = {"date": []}
+        str_train_val = {"date": []}
+        str_all = {"date": []}
+
+        datetime_use = datetime(day = 1, month = 1, year = 1970)
 
         for ik in range(ws_use):
-            together_csv += str(ik) + ","
+            str_train[str(ik)] = []
+            str_val[str(ik)] = []
+            str_test[str(ik)] = []
+            str_train_val[str(ik)] = []
+            str_all[str(ik)] = []
 
-        together_csv += "OT\n"
-    
-        str_train = "" 
-        str_val = ""
-        str_test = ""
-        datetime_use = datetime(day = 1, month = 1, year = 1970)
+        str_train["OT"] = []
+        str_val["OT"] = []
+        str_test["OT"] = []
+        str_train_val["OT"] = []
+        str_all["OT"] = []
         
         for k in file_object_train:
 
@@ -82,19 +92,21 @@ for ws_use in ws_range:
             
             for ix1 in range(len(x_train_part)):
                     
-                str_train += datetime.strftime(datetime_use, "%Y-%m-%d %H-%M-%S") + ","
+                str_train["date"].append(datetime.strftime(datetime_use, "%Y-%m-%d %H-%M-%S"))
+                str_train_val["date"].append(datetime.strftime(datetime_use, "%Y-%m-%d %H-%M-%S"))
+                str_all["date"].append(datetime.strftime(datetime_use, "%Y-%m-%d %H-%M-%S"))
 
                 for ix2 in range(len(x_train_part[ix1])): 
-                    str_train += str(x_train_part[ix1][ix2]).replace(",", ".") + ","
+                    str_train[str(ix2)].append(str(x_train_part[ix1][ix2]).replace(",", "."))
+                    str_train_val[str(ix2)].append(str(x_train_part[ix1][ix2]).replace(",", ".")) 
+                    str_all[str(ix2)].append(str(x_train_part[ix1][ix2]).replace(",", ".")) 
                     
                 for ix2 in range(len(y_train_part[ix1])): 
-                    str_train += str(y_train_part[ix1][ix2]).replace(",", ".") + ","
+                    str_train["OT"].append(str(y_train_part[ix1][ix2]).replace(",", "."))
+                    str_train_val["OT"].append(str(y_train_part[ix1][ix2]).replace(",", "."))
+                    str_all["OT"].append(str(y_train_part[ix1][ix2]).replace(",", "."))
                 
                 datetime_use += timedelta(hours = 1)
-
-                str_train = str_train[:-1]
-
-                str_train += "\n" 
 
         for k in file_object_val:
 
@@ -102,19 +114,21 @@ for ws_use in ws_range:
             
             for ix1 in range(len(x_val_part)):
 
-                str_val += datetime.strftime(datetime_use, "%Y-%m-%d %H-%M-%S") + ","
+                str_val["date"].append(datetime.strftime(datetime_use, "%Y-%m-%d %H-%M-%S"))
+                str_train_val["date"].append(datetime.strftime(datetime_use, "%Y-%m-%d %H-%M-%S"))
+                str_all["date"].append(datetime.strftime(datetime_use, "%Y-%m-%d %H-%M-%S"))
 
                 for ix2 in range(len(x_val_part[ix1])):
-                    str_val += str(x_val_part[ix1][ix2]).replace(",", ".") + ","
+                    str_val[str(ix2)].append(str(x_val_part[ix1][ix2]).replace(",", "."))
+                    str_train_val[str(ix2)].append(str(x_val_part[ix1][ix2]).replace(",", "."))
+                    str_all[str(ix2)].append(str(x_val_part[ix1][ix2]).replace(",", ".")) 
 
                 for ix2 in range(len(y_val_part[ix1])):
-                    str_val += str(y_val_part[ix1][ix2]).replace(",", ".") + ","
+                    str_val["OT"].append(str(y_val_part[ix1][ix2]).replace(",", "."))
+                    str_train_val["OT"].append(str(y_val_part[ix1][ix2]).replace(",", "."))
+                    str_all["OT"].append(str(y_val_part[ix1][ix2]).replace(",", "."))
                 
                 datetime_use += timedelta(hours = 1)
-
-                str_val = str_val[:-1]
-
-                str_val += "\n"
 
         for k in file_object_test:
 
@@ -122,38 +136,36 @@ for ws_use in ws_range:
             
             for ix1 in range(len(x_test_part)):
 
-                str_test += datetime.strftime(datetime_use, "%Y-%m-%d %H-%M-%S") + ","
+                str_test["date"].append(datetime.strftime(datetime_use, "%Y-%m-%d %H-%M-%S"))
+                str_all["date"].append(datetime.strftime(datetime_use, "%Y-%m-%d %H-%M-%S"))
 
                 for ix2 in range(len(x_test_part[ix1])):
-                    str_test += str(x_test_part[ix1][ix2]).replace(",", ".") + ","
+                    str_test[str(ix2)].append(str(x_test_part[ix1][ix2]).replace(",", "."))
+                    str_all[str(ix2)].append(str(x_test_part[ix1][ix2]).replace(",", ".")) 
 
                 for ix2 in range(len(y_test_part[ix1])):
-                    str_test += str(y_test_part[ix1][ix2]).replace(",", ".") + ","
+                    str_test["OT"].append(str(y_test_part[ix1][ix2]).replace(",", "."))
+                    str_all["OT"].append(str(y_test_part[ix1][ix2]).replace(",", "."))
                     
                 datetime_use += timedelta(hours = 1)
-
-                str_test = str_test[:-1]
-
-                str_test += "\n" 
 
         if not os.path.isdir("csv_data/dataset/" + str(ws_use) + "/" + varname):
             os.makedirs("csv_data/dataset/" + str(ws_use) + "/" + varname)
 
-        file_train_write = open("csv_data/dataset/" + str(ws_use) + "/" + varname + "/newdata_TRAIN.csv", "w")
-        file_train_write.write(together_csv + str_train)
-        file_train_write.close()
-        file_train_val_write = open("csv_data/dataset/" + str(ws_use) + "/" + varname + "/newdata_TRAIN_VAL.csv", "w") 
-        file_train_val_write.write(together_csv + str_train + str_val)
-        file_train_val_write.close()
-        file_val_write = open("csv_data/dataset/" + str(ws_use) + "/" + varname + "/newdata_VAL.csv", "w")
-        file_val_write.write(together_csv + str_val)
-        file_val_write.close()
-        file_test_write = open("csv_data/dataset/" + str(ws_use) + "/" + varname + "/newdata_TEST.csv", "w")
-        file_test_write.write(together_csv + str_test)
-        file_test_write.close()
-        file_all_write = open("csv_data/dataset/" + str(ws_use) + "/" + varname + "/newdata_ALL.csv", "w") 
-        file_all_write.write(together_csv + str_train + str_val + str_test)
-        file_all_write.close()
+        file_train_write = pd.DataFrame(str_train) 
+        file_train_write.to_csv("csv_data/dataset/" + str(ws_use) + "/" + varname + "/newdata_TRAIN.csv", index = False, sep = ",") 
+
+        file_val_write = pd.DataFrame(str_val) 
+        file_val_write.to_csv("csv_data/dataset/" + str(ws_use) + "/" + varname + "/newdata_VAL.csv", index = False, sep = ",") 
+
+        file_train_val_write = pd.DataFrame(str_train_val) 
+        file_train_val_write.to_csv("csv_data/dataset/" + str(ws_use) + "/" + varname + "/newdata_TRAIN_VAL.csv", index = False, sep = ",") 
+
+        file_test_write = pd.DataFrame(str_all) 
+        file_test_write.to_csv("csv_data/dataset/" + str(ws_use) + "/" + varname + "/newdata_TEST.csv", index = False, sep = ",") 
+
+        file_all_write = pd.DataFrame(str_test) 
+        file_all_write.to_csv("csv_data/dataset/" + str(ws_use) + "/" + varname + "/newdata_ALL.csv", index = False, sep = ",") 
     
     if not os.path.isdir("csv_data/data_provider/" + str(ws_use)):
         os.makedirs("csv_data/data_provider/" + str(ws_use))
