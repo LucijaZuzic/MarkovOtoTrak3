@@ -13,8 +13,9 @@ MIN_FREQ = 2
 MAX_VOCAB_SIZE = 8000  
 
 num_props = 1
- 
-ws_range = range(5, 7) 
+
+ws_range = [2, 5, 6, 10, 20, 30]
+
 for filename in os.listdir("actual_train"):
     for ws_use in ws_range:
         varname = filename.replace("actual_train_", "")

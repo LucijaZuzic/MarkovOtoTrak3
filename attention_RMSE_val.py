@@ -5,7 +5,8 @@ import math
 import numpy as np
 from sklearn.metrics import mean_squared_error, r2_score, mean_absolute_error
 
-ws_range = range(5, 7)
+num_to_ws = [-1, 5, 6, 5, 6, 5, 6, 5, 6, 2, 10, 20, 30, 2, 10, 20, 30, 2, 10, 20, 30, 2, 10, 20, 30]
+num_to_params = [-1, 1, 1, 2, 2, 3, 3, 4, 4, 1, 1, 1, 1, 2, 2, 2, 2, 3, 3, 3, 3, 4, 4, 4, 4]
 model_name = "GRU_Att"
 
 for varname in os.listdir("train_attention1"):
@@ -27,7 +28,7 @@ for varname in os.listdir("train_attention1"):
             all_mine_flat.append(val)
 
     for test_num in range(1, 9):
-        ws_use = (test_num - 1) % len(ws_range) + min(ws_range)
+        ws_use = num_to_ws[test_num]
 
         final_test_data = pd.read_csv("train_attention" + str(test_num) + "/" + varname + "/predictions/test/" + model_name + "/" + varname + "_" + model_name + "_ws_" + str(ws_use) + "_test.csv", sep = ";", index_col = False)
         
@@ -92,5 +93,5 @@ for varname in os.listdir("train_attention1"):
         unk_arr.append(test_unk / len(final_test_data_predicted))
 
     for mini_ix_val in range(len(final_test_RMSE)):
-        ws_use = (test_ix[mini_ix_val] - 1) % len(ws_range) + min(ws_range)
-        print(ws_use, (test_ix[mini_ix_val] - 1) // len(ws_range) + 1, np.round(unk_arr[mini_ix_val] * 100, 4), np.round(final_test_NRMSE[mini_ix_val] * 100, 2), np.round(final_test_R2[mini_ix_val] * 100, 2), np.round(final_test_MAE[mini_ix_val], 6), np.round(final_test_RMSE[mini_ix_val], 6))
+        ws_use = num_to_ws[test_ix[mini_ix_val]]
+        print(ws_use, num_to_params[test_ix[mini_ix_val]], np.round(unk_arr[mini_ix_val] * 100, 4), np.round(final_test_NRMSE[mini_ix_val] * 100, 2), np.round(final_test_R2[mini_ix_val] * 100, 2), np.round(final_test_MAE[mini_ix_val], 6), np.round(final_test_RMSE[mini_ix_val], 6))

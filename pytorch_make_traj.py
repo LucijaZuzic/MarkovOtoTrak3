@@ -22,7 +22,7 @@ predicted_all = dict()
 y_test_all = dict()
 ws_all = dict() 
 
-ws_range = range(5, 7)
+ws_range = [2, 5, 6, 10, 20, 30]
 
 hidden_range = [220]
 

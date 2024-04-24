@@ -26,7 +26,7 @@ actual_all = dict()
 y_test_all = dict()
 ws_all = dict() 
 BLEU_all = dict()
-ws_range = range(5, 7)
+num_to_ws = [-1, 5, 6, 5, 6, 5, 6, 5, 6, 2, 10, 20, 30, 2, 10, 20, 30, 2, 10, 20, 30, 2, 10, 20, 30]
 model_name = "GRU_Att"
 
 for varname in os.listdir("train_attention1"):
@@ -40,7 +40,7 @@ for varname in os.listdir("train_attention1"):
     BLEU_all[varname] = dict()
 
     for test_num in range(1, 9):
-        ws_use = (test_num - 1) % len(ws_range) + min(ws_range)
+        ws_use = num_to_ws[test_num]
 
         print(test_num)
         

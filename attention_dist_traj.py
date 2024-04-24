@@ -5,7 +5,8 @@ from utilities import load_object, save_object, compare_traj_and_sample
 import math
 from sklearn.metrics import r2_score, mean_absolute_error, mean_squared_error
 
-ws_range = range(5, 7)
+num_to_ws = [-1, 5, 6, 5, 6, 5, 6, 5, 6, 2, 10, 20, 30, 2, 10, 20, 30, 2, 10, 20, 30, 2, 10, 20, 30]
+num_to_params = [-1, 1, 1, 2, 2, 3, 3, 4, 4, 1, 1, 1, 1, 2, 2, 2, 2, 3, 3, 3, 3, 4, 4, 4, 4]
 
 def str_convert_new(val):
     new_val = val
@@ -87,9 +88,9 @@ def draw_mosaic_one(x_actual, y_actual, x_predicted, y_predicted, k, model_name,
     vehicle = split_file_veh[0].replace("Vehicle_", "")
     ride = split_file_veh[-1].replace("events_", "").replace(".csv", "")
 
-    ws_use = (test_num - 1) % len(ws_range) + min(ws_range)
+    ws_use = num_to_ws[test_num]
 
-    title_new = "Vehicle " + vehicle + " Ride " + ride + "\n" + model_name + " model\n" + "Window size " + str(ws_use) + "\n" + "Experiment number " + str((test_num - 1) // len(ws_range) + 1) + "\n" 
+    title_new = "Vehicle " + vehicle + " Ride " + ride + "\n" + model_name + " model\n" + "Window size " + str(ws_use) + "\n" + "Experiment number " + str(num_to_params[test_num]) + "\n" 
 
     title_new += translate_category(dist_name) + "\n" 
     for metric in distance_predicted_new:

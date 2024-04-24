@@ -41,19 +41,34 @@ disable_pro_bar = not progress_bar
 def my_token(xv, yv, name_file):
     
     strpr = "x>y\n"
-    for ix1 in range(len(xv)): 
-        strpr += str(xv[ix1]).strip() + ">" + str(yv[ix1]).strip() + "\n"
-
-    while "  " in strpr:
-        strpr = strpr.replace("  ", " ")
 
     file_processed = open(name_file, "w")
-    file_processed.write(strpr.replace("[", "").replace("]", "").replace(".", "a").replace(",", "a"))
+    file_processed.write(strpr)
     file_processed.close()
+
+    dicti_vals = {"x": [], "y": []}
+    for ix1 in range(len(xv)): 
+
+        v1 = str(xv[ix1]).strip()
+        v2 = str(yv[ix1]).strip()
+
+        while "  " in v1:
+            v1 = v1.replace("  ", " ")
+
+        while "  " in v2:
+            v2 = v2.replace("  ", " ")
+
+        dicti_vals["x"].append(v1.replace("[", "").replace("]", "").replace(".", "a").replace(",", "a"))
+        dicti_vals["y"].append(v2.replace("[", "").replace("]", "").replace(".", "a").replace(",", "a"))
+
+    df_new = pd.DataFrame(dicti_vals)
+
+    df_new.to_csv(name_file, index = False, sep = ">") 
 
 num_props = 1
 
-ws_range = [2, 10]
+ws_range = [20, 30]
+marking_for_range = {2: 9, 10: 10, 20: 11, 30: 12}
 model_name = "GRU_Att"
 
 resave = True
@@ -134,7 +149,7 @@ if resave:
             my_token(x_test_all, y_test_all, "tokenized_data/" + varname + "/" + varname + "_test_" + str(ws_use) + ".csv")
             my_token(x_test_all_short, y_test_all_short, "tokenized_data/" + varname + "/" + varname + "_test_short_" + str(ws_use) + ".csv")
 
-train_a_model = False
+train_a_model = True
 if train_a_model:
     for filename in os.listdir("actual_train"):
         for ws_use in ws_range:
@@ -249,18 +264,18 @@ if train_a_model:
 
                 print(f"Epoch Training time: {(time()-now)/60:.2f} minutes.")
 
-            if not os.path.isdir("train_attention" + str(ws_use - min(ws_range) + 1) + "/" + varname + "/models/" + model_name):
-                os.makedirs("train_attention" + str(ws_use - min(ws_range) + 1) + "/" + varname + "/models/" + model_name)
+            if not os.path.isdir("train_attention" + str(marking_for_range[ws_use]) + "/" + varname + "/models/" + model_name):
+                os.makedirs("train_attention" + str(marking_for_range[ws_use]) + "/" + varname + "/models/" + model_name)
 
-            if not os.path.isdir("train_attention" + str(ws_use - min(ws_range) + 1) + "/" + varname + "/predictions/test/" + model_name):
-                os.makedirs("train_attention" + str(ws_use - min(ws_range) + 1) + "/" + varname + "/predictions/test/" + model_name)
+            if not os.path.isdir("train_attention" + str(marking_for_range[ws_use]) + "/" + varname + "/predictions/test/" + model_name):
+                os.makedirs("train_attention" + str(marking_for_range[ws_use]) + "/" + varname + "/predictions/test/" + model_name)
         
-            save_object("train_attention" + str(ws_use - min(ws_range) + 1) + "/" + varname + "/models/" + model_name + "/" + varname + "_" + model_name + "_ws_" + str(ws_use) + "_train_losses", train_losses)
+            save_object("train_attention" + str(marking_for_range[ws_use]) + "/" + varname + "/models/" + model_name + "/" + varname + "_" + model_name + "_ws_" + str(ws_use) + "_train_losses", train_losses)
 
-            save_object("train_attention" + str(ws_use - min(ws_range) + 1) + "/" + varname + "/models/" + model_name + "/" + varname + "_" + model_name + "_ws_" + str(ws_use) + "_val_losses", val_losses)
+            save_object("train_attention" + str(marking_for_range[ws_use]) + "/" + varname + "/models/" + model_name + "/" + varname + "_" + model_name + "_ws_" + str(ws_use) + "_val_losses", val_losses)
             
             model.seq2seq.eval()
-            torch.save(model.seq2seq.state_dict(), "train_attention" + str(ws_use - min(ws_range) + 1) + "/" + varname + "/models/" + model_name + "/" + varname + "_" + model_name + "_ws_" + str(ws_use) + ".pth")
+            torch.save(model.seq2seq.state_dict(), "train_attention" + str(marking_for_range[ws_use]) + "/" + varname + "/models/" + model_name + "/" + varname + "_" + model_name + "_ws_" + str(ws_use) + ".pth")
             
             with torch.no_grad():
 
@@ -282,7 +297,7 @@ if train_a_model:
                     )
                     y_test_all.append([str(list_y[i])]) 
                     predict_test_all.append([translation]) 
-                print_predictions(y_test_all, predict_test_all, "train_attention" + str(ws_use - min(ws_range) + 1) + "/" + varname + "/predictions/test/" + model_name + "/" + varname + "_" + model_name + "_ws_" + str(ws_use) + "_test.csv")
+                print_predictions(y_test_all, predict_test_all, "train_attention" + str(marking_for_range[ws_use]) + "/" + varname + "/predictions/test/" + model_name + "/" + varname + "_" + model_name + "_ws_" + str(ws_use) + "_test.csv")
 
 test_a_model = False
 if test_a_model:
@@ -338,7 +353,7 @@ if test_a_model:
                 train_attention=TRAIN_ATTENTION,
             )
 
-            model.seq2seq.load_state_dict(torch.load("train_attention" + str(ws_use - min(ws_range) + 1) + "/" + varname + "/models/" + model_name + "/" + varname + "_" + model_name + "_ws_" + str(ws_use) + ".pth"))
+            model.seq2seq.load_state_dict(torch.load("train_attention" + str(marking_for_range[ws_use]) + "/" + varname + "/models/" + model_name + "/" + varname + "_" + model_name + "_ws_" + str(ws_use) + ".pth"))
             
             model.seq2seq.eval()
 
@@ -362,4 +377,4 @@ if test_a_model:
                     )
                     y_test_all.append([str(list_y[i])]) 
                     predict_test_all.append([translation]) 
-                print_predictions(y_test_all, predict_test_all, "train_attention" + str(ws_use - min(ws_range) + 1) + "/" + varname + "/predictions/test/" + model_name + "/" + varname + "_" + model_name + "_ws_" + str(ws_use) + "_test.csv")
+                print_predictions(y_test_all, predict_test_all, "train_attention" + str(marking_for_range[ws_use]) + "/" + varname + "/predictions/test/" + model_name + "/" + varname + "_" + model_name + "_ws_" + str(ws_use) + "_test.csv")
