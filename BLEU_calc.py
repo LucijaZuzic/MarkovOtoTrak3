@@ -39,7 +39,7 @@ for varname in os.listdir("train_attention1"):
     ws_all[varname] = dict() 
     BLEU_all[varname] = dict()
 
-    for test_num in range(1, 9):
+    for test_num in range(1, 24):
         ws_use = num_to_ws[test_num]
 
         print(test_num)

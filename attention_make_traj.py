@@ -42,7 +42,7 @@ for varname in os.listdir("train_attention1"):
     y_test_all[varname][model_name] = dict()
     ws_all[varname][model_name] = dict() 
 
-    for test_num in range(1, 9):
+    for test_num in range(1, 24):
         ws_use = num_to_ws[test_num]
 
         predicted_all[varname][model_name][test_num] = dict()
@@ -123,7 +123,7 @@ actual_lat[model_name] = dict()
 predicted_long[model_name] = dict()
 predicted_lat[model_name] = dict()
 
-for test_num in range(1, 9):
+for test_num in range(1, 24):
 
     actual_long[model_name][test_num] = dict()
     actual_lat[model_name][test_num] = dict()

@@ -21,7 +21,7 @@ def get_XY(dat, time_steps, len_skip = -1, len_output = -1):
     Y = np.array(Y)
     return X, Y
 
-ws_range = [20, 30]
+ws_range = [9, 19, 29]
 
 for ws_use in ws_range:
     

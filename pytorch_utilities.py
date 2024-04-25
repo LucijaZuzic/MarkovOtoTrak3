@@ -1,17 +1,36 @@
 import torch
 import torch.nn as nn
 import numpy as np
+import pandas as pd
+
+def fix_file_predictions(name_file):
+    with open(name_file,'r') as f:
+        lines = f.readlines()
+        strpr = {"actual": [], "predicted": []}
+        cum_c = 0
+        buffer = ''
+        for line in lines:
+            buffer += line # Append the current line to a buffer
+            cum_c = buffer.count(';')
+            if cum_c == 1:
+                if "actual" not in buffer:
+                    strpr["actual"].append(buffer.split(";")[0].replace("\n", "").replace('"', ""))
+                    strpr["predicted"].append(buffer.split(";")[1].replace("\n", "").replace('"', ""))
+                buffer = ''
+            elif cum_c > 1:
+                raise # This should never happen
+        df_new = pd.DataFrame(strpr)
+        df_new.to_csv(name_file, index = False, sep = ";")
 
 def print_predictions(actual, predicted, name_file):
     
-    strpr = "actual;predicted\n"
+    strpr = {"actual": [], "predicted": []}
     for ix1 in range(len(actual)):
         for ix2 in range(len(actual[ix1])):
-            strpr += str(actual[ix1][ix2]) + ";" + str(predicted[ix1][ix2]) + "\n"
-
-    file_processed = open(name_file, "w")
-    file_processed.write(strpr.replace("[", "").replace("]", "").replace("tensor(", "").replace(")", ""))
-    file_processed.close()
+            strpr["actual"].append(str(actual[ix1][ix2]).replace("[", "").replace("]", "").replace("tensor(", "").replace(")", ""))
+            strpr["predicted"].append(str(predicted[ix1][ix2]).replace("[", "").replace("]", "").replace("tensor(", "").replace(")", ""))
+    df_new = pd.DataFrame(strpr)
+    df_new.to_csv(name_file, index = False, sep = ";") 
 
 def get_XY(dat, time_steps, len_skip = -1, len_output = -1):
     X = []

@@ -67,7 +67,7 @@ def my_token(xv, yv, name_file):
 
 num_props = 1
 
-ws_range = [2, 10, 20, 30]
+ws_range = [20, 30]
 marking_for_range = {2: 17, 10: 18, 20: 19, 30: 20}
 model_name = "GRU_Att"
 
@@ -154,6 +154,8 @@ if train_a_model:
     for filename in os.listdir("actual_train"):
         for ws_use in ws_range:
             varname = filename.replace("actual_train_", "")
+            if varname != "time":
+                continue
 
             src_field, trg_field = build_fields()
             train_set, val_set, test_set = get_datasets(train_path="tokenized_data/" + varname + "/" + varname + "_train_" + str(ws_use) + ".csv", 

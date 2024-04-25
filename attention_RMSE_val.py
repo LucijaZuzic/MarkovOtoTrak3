@@ -27,8 +27,8 @@ for varname in os.listdir("train_attention1"):
         for val in all_mine[filename]:
             all_mine_flat.append(val)
 
-    for test_num in range(1, 9):
-        ws_use = num_to_ws[test_num]
+    for test_num in range(1, 21):
+        ws_use = num_to_ws[test_num] 
 
         final_test_data = pd.read_csv("train_attention" + str(test_num) + "/" + varname + "/predictions/test/" + model_name + "/" + varname + "_" + model_name + "_ws_" + str(ws_use) + "_test.csv", sep = ";", index_col = False)
         

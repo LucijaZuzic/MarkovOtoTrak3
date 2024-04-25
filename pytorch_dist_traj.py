@@ -119,7 +119,7 @@ if not os.path.isdir("mosaic_pytorch"):
 if not os.path.isdir("mosaic_pytorch_all"):
     os.makedirs("mosaic_pytorch_all")
 
-use_draw = True
+use_draw = False
 
 for metric in metric_names:
 
