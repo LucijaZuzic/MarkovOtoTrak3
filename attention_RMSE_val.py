@@ -9,7 +9,11 @@ num_to_ws = [-1, 5, 6, 5, 6, 5, 6, 5, 6, 2, 10, 20, 30, 2, 10, 20, 30, 2, 10, 20
 num_to_params = [-1, 1, 1, 2, 2, 3, 3, 4, 4, 1, 1, 1, 1, 2, 2, 2, 2, 3, 3, 3, 3, 4, 4, 4, 4, 1, 2, 3, 4]
 model_name = "GRU_Att"
 
+dicti_to_print = dict()
+
 for varname in os.listdir("train_attention1"):
+    
+    dicti_to_print[varname] = dict()
     
     print(varname)
 
@@ -94,4 +98,51 @@ for varname in os.listdir("train_attention1"):
 
     for mini_ix_val in range(len(final_test_RMSE)):
         ws_use = num_to_ws[test_ix[mini_ix_val]]
+        if model_name + "_" + str(num_to_params[test_ix[mini_ix_val]]) not in dicti_to_print[varname]:
+            dicti_to_print[varname][model_name + "_" + str(num_to_params[test_ix[mini_ix_val]])] = dict()
+        dicti_to_print[varname][model_name + "_" + str(num_to_params[test_ix[mini_ix_val]])][str(ws_use)] = dict()
+        dicti_to_print[varname][model_name + "_" + str(num_to_params[test_ix[mini_ix_val]])][str(ws_use)]["NRMSE"] = final_test_NRMSE[mini_ix_val] 
+        dicti_to_print[varname][model_name + "_" + str(num_to_params[test_ix[mini_ix_val]])][str(ws_use)]["RMSE"] = final_test_RMSE[mini_ix_val] 
+        dicti_to_print[varname][model_name + "_" + str(num_to_params[test_ix[mini_ix_val]])][str(ws_use)]["R2"] = final_test_R2[mini_ix_val]  
+        dicti_to_print[varname][model_name + "_" + str(num_to_params[test_ix[mini_ix_val]])][str(ws_use)]["MAE"] = final_test_R2[mini_ix_val]  
         print(ws_use, num_to_params[test_ix[mini_ix_val]], np.round(unk_arr[mini_ix_val] * 100, 4), np.round(final_test_NRMSE[mini_ix_val] * 100, 2), np.round(final_test_R2[mini_ix_val] * 100, 2), np.round(final_test_MAE[mini_ix_val], 6), np.round(final_test_RMSE[mini_ix_val], 6))
+        
+rv_metric = {"R2": 2, "RMSE": 6, "MAE": 6, "NRMSE": 2}
+mul_metric = {"R2": 100, "RMSE": 1, "MAE": 1, "NRMSE": 100}
+list_ws = sorted([int(x) for x in dicti_to_print["speed"]["GRU_Att_1"]])
+
+for metric_name_use in list(rv_metric.keys()):
+    for varname in dicti_to_print:
+        str_pr = ""
+        first_line = metric_name_use + " " + varname
+        for model_name_use in dicti_to_print[varname]:
+            for val_ws in list_ws:
+                first_line += " & $" + str(val_ws) + "$"
+            break
+        print(first_line + " \\\\ \\hline")
+        for model_name_use in dicti_to_print[varname]:
+            str_pr += model_name_use
+            for val_ws in list_ws: 
+                vv = dicti_to_print[varname][model_name_use][str(val_ws)][metric_name_use] 
+                vv = np.round(vv * mul_metric[metric_name_use], rv_metric[metric_name_use])
+                str_pr += " & $" + str(vv) + "$"
+            str_pr += " \\\\ \\hline\n"
+        print(str_pr)
+
+for metric_name_use in list(rv_metric.keys()):
+    for model_name_use in dicti_to_print["speed"]:
+        str_pr = ""
+        first_line = metric_name_use + " " + model_name_use
+        for varname in dicti_to_print:
+            for val_ws in list_ws:
+                first_line += " & $" + str(val_ws) + "$"
+            break
+        print(first_line + " \\\\ \\hline")
+        for varname in dicti_to_print:
+            str_pr += varname
+            for val_ws in list_ws: 
+                vv = dicti_to_print[varname][model_name_use][str(val_ws)][metric_name_use] 
+                vv = np.round(vv * mul_metric[metric_name_use], rv_metric[metric_name_use])
+                str_pr += " & $" + str(vv) + "$"
+            str_pr += " \\\\ \\hline\n"
+        print(str_pr)

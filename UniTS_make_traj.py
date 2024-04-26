@@ -26,21 +26,45 @@ ws_range = [2, 4, 5, 9, 19, 29]
  
 model_name = "UniTS"
 
+if os.path.isfile("UniTS_final_result/predicted_all"):
+    predicted_all = load_object("UniTS_result/predicted_all")
+    
+if os.path.isfile("UniTS_final_result/y_test_all"):
+    y_test_all = load_object("UniTS_final_result/y_test_all")
+
+if os.path.isfile("UniTS_final_result/ws_all"):
+    ws_all = load_object("UniTS_final_result/ws_all")
+
 for varname in os.listdir("final_train_pytorch"):
 
-    predicted_all[varname] = dict()
-    y_test_all[varname] = dict()
-    ws_all[varname] = dict() 
+    if varname not in predicted_all:
+        predicted_all[varname] = dict()
 
-    predicted_all[varname][model_name] = dict()
-    y_test_all[varname][model_name] = dict()
-    ws_all[varname][model_name] = dict() 
+    if varname not in y_test_all:
+        y_test_all[varname] = dict()
+
+    if varname not in ws_all:
+        ws_all[varname] = dict()
+
+    if model_name not in predicted_all[varname]:
+        predicted_all[varname][model_name] = dict()
+        
+    if model_name not in y_test_all[varname]:
+        y_test_all[varname][model_name] = dict()
+
+    if model_name not in ws_all[varname]:
+        ws_all[varname][model_name] = dict()
     
     for ws_use in ws_range:
 
-        predicted_all[varname][model_name][ws_use] = dict()
-        y_test_all[varname][model_name][ws_use] = dict()
-        ws_all[varname][model_name][ws_use] = dict() 
+        if ws_use not in predicted_all[varname][model_name]:
+            predicted_all[varname][model_name][ws_use] = dict()
+            
+        if ws_use not in y_test_all[varname][model_name]:
+            y_test_all[varname][model_name][ws_use] = dict()
+
+        if ws_use not in ws_all[varname][model_name]:
+            ws_all[varname][model_name][ws_use] = dict()
   
         final_test_data = pd.read_csv("UniTS_final_res/" + str(ws_use) + "/" + varname + ".csv", index_col = False)
 
@@ -74,20 +98,35 @@ predicted_lat = dict()
 
 actual_long = dict()
 actual_lat = dict() 
-        
-actual_long[model_name] = dict()
-actual_lat[model_name] = dict()
 
-predicted_long[model_name] = dict()
-predicted_lat[model_name] = dict()
+if os.path.isfile("UniTS_final_result/predicted_long"):
+    predicted_long = load_object("UniTS_final_result/predicted_long")
+
+if os.path.isfile("UniTS_final_result/predicted_lat"):
+    predicted_lat = load_object("UniTS_final_result/predicted_lat")
+
+if os.path.isfile("UniTS_final_result/actual_long"):
+    actual_long = load_object("UniTS_final_result/actual_long")
+
+if os.path.isfile("UniTS_final_result/actual_lat"):
+    actual_lat = load_object("UniTS_final_result/actual_lat")
+        
+if model_name not in actual_long:
+    actual_long[model_name] = dict()
+if model_name not in actual_lat:
+    actual_lat[model_name] = dict() 
+
+if model_name not in predicted_long:
+    predicted_long[model_name] = dict()
+if model_name not in predicted_lat:
+    predicted_lat[model_name] = dict()  
 
 for ws_use in ws_range:
 
-    actual_long[model_name][ws_use] = dict()
-    actual_lat[model_name][ws_use] = dict()
-
-    predicted_long[model_name][ws_use] = dict()
-    predicted_lat[model_name][ws_use] = dict()
+    if ws_use not in actual_long[model_name]:
+        actual_long[model_name][ws_use] = dict()
+    if ws_use not in actual_lat[model_name]:
+        actual_lat[model_name][ws_use] = dict()  
    
     for k in y_test_all["longitude_no_abs"][model_name][ws_use]:
         print(model_name, k, "actual")
@@ -105,11 +144,15 @@ for ws_use in ws_range:
             actual_long[model_name][ws_use][k].append(actual_long[model_name][ws_use][k][-1] + y_test_all["longitude_no_abs"][model_name][ws_use][k][ix + long_offset])
             actual_lat[model_name][ws_use][k].append(actual_lat[model_name][ws_use][k][-1] + y_test_all["latitude_no_abs"][model_name][ws_use][k][ix + lat_offset])
 
-    predicted_long[model_name][ws_use] = dict()
-    predicted_lat[model_name][ws_use] = dict()
+    if ws_use not in predicted_long[model_name]:
+        predicted_long[model_name][ws_use] = dict()
+    if ws_use not in predicted_lat[model_name]:
+        predicted_lat[model_name][ws_use] = dict()  
         
-    predicted_long[model_name][ws_use]["long no abs"] = dict()
-    predicted_lat[model_name][ws_use]["lat no abs"] = dict()
+    if "long no abs" not in predicted_long[model_name][ws_use]:
+        predicted_long[model_name][ws_use]["long no abs"] = dict()
+    if "lat no abs" not in predicted_lat[model_name][ws_use]:
+        predicted_lat[model_name][ws_use]["lat no abs"] = dict()  
 
     for k in predicted_all["longitude_no_abs"][model_name][ws_use]:
         print(model_name, k, "long no abs")
@@ -127,8 +170,10 @@ for ws_use in ws_range:
             predicted_long[model_name][ws_use]["long no abs"][k].append(predicted_long[model_name][ws_use]["long no abs"][k][-1] + predicted_all["longitude_no_abs"][model_name][ws_use][k][ix + long_offset])
             predicted_lat[model_name][ws_use]["lat no abs"][k].append(predicted_lat[model_name][ws_use]["lat no abs"][k][-1] + predicted_all["latitude_no_abs"][model_name][ws_use][k][ix + lat_offset])
 
-    predicted_long[model_name][ws_use]["long speed dir"] = dict()
-    predicted_lat[model_name][ws_use]["lat speed dir"] = dict()
+    if "long speed dir" not in predicted_long[model_name][ws_use]:
+        predicted_long[model_name][ws_use]["long speed dir"] = dict()
+    if "lat speed dir" not in predicted_lat[model_name][ws_use]:
+        predicted_lat[model_name][ws_use]["lat speed dir"] = dict()  
 
     for k in predicted_all["speed"][model_name][ws_use]:
         print(model_name, k, "long speed dir")
@@ -148,9 +193,11 @@ for ws_use in ws_range:
             new_long, new_lat = get_sides_from_angle(predicted_all["speed"][model_name][ws_use][k][ix + speed_offset_time] / 111 / 0.1 / 3600 * predicted_all["time"][model_name][ws_use][k][ix + time_offset_time], change_angle(predicted_all["direction"][model_name][ws_use][k][ix + dir_offset_time], k))
             predicted_long[model_name][ws_use]["long speed dir"][k].append(predicted_long[model_name][ws_use]["long speed dir"][k][-1] + new_long)
             predicted_lat[model_name][ws_use]["lat speed dir"][k].append(predicted_lat[model_name][ws_use]["lat speed dir"][k][-1] + new_lat)
-            
-    predicted_long[model_name][ws_use]["long speed ones dir"] = dict()
-    predicted_lat[model_name][ws_use]["lat speed ones dir"] = dict()
+             
+    if "long speed ones dir" not in predicted_long[model_name][ws_use]:
+        predicted_long[model_name][ws_use]["long speed ones dir"] = dict()
+    if "lat speed ones dir" not in predicted_lat[model_name][ws_use]:
+        predicted_lat[model_name][ws_use]["lat speed ones dir"] = dict()  
 
     for k in predicted_all["speed"][model_name][ws_use]:
         print(model_name, k, "long speed ones dir")

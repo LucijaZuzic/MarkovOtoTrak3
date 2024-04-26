@@ -122,8 +122,8 @@ if not os.path.isdir("mosaic_attention"):
 if not os.path.isdir("mosaic_attention_all"):
     os.makedirs("mosaic_attention_all")
 
-use_draw = True
-
+dicti_to_print = dict()
+use_draw = False
 for metric in metric_names:
 
     distance_predicted_new[metric] = dict()
@@ -217,7 +217,7 @@ for metric in metric_names:
                         vehicle = split_file_veh[0].replace("Vehicle_", "")
                         ride = split_file_veh[-1].replace("events_", "").replace(".csv", "")
 
-                        if use_draw:
+                        if use_draw or int(test_num) > 24:
                             
                             filename = "mosaic_attention_all/Vehicle_" + vehicle + "_events_" + ride + "_" + model_name + "_" + str(test_num) + "_" + dist_name + "_" + dist_name.replace("long", "lat") + "_test_mosaic.png"
                             draw_mosaic_one(actual_long_one, actual_lat_one, predicted_long_one, predicted_lat_one, k, model_name, filename, test_num, dist_name)
@@ -238,12 +238,12 @@ for metric in metric_names:
                             predicted_long_lat.append([predicted_long_one[ix_use_len], predicted_lat_one[ix_use_len]])
                             predicted_long_lat_time.append([predicted_long_one[ix_use_len], predicted_lat_one[ix_use_len], time_predicted_cumulative[ix_use_len]])
                     
-                    if use_draw:
+                    if use_draw or int(test_num) > 24:
 
                         filename_veh = "mosaic_attention/Vehicle_" + str(v) + "_" + model_name + "_" + str(test_num) + "_" + dist_name.replace("long", "lat") + "_test_mosaic.png"
                         draw_mosaic(all_actual_vehicle, all_predicted, filename_veh)
 
-                if use_draw:
+                if use_draw or int(test_num) > 24:
 
                     filename = "mosaic_attention/all_" + model_name + "_" + str(test_num) + "_" + dist_name.replace("long", "lat") + "_test_mosaic.png"
                     draw_mosaic(all_actual, all_predicted, filename)
@@ -272,5 +272,64 @@ for metric in metric_names:
                 print("R2_wt", np.round(r2_pred_wt * 100, 2))
                 print("MAE_wt", np.round(mae_pred_wt, 6))
                 print("RMSE_wt", np.round(rmse_pred_wt, 6))
+                
+                ws_use = num_to_ws[test_num]
+
+                if dist_name not in dicti_to_print:
+                    dicti_to_print[dist_name] = dict()
+
+                if "GRU_Att_" + str(num_to_params[test_num]) not in dicti_to_print[dist_name]:
+                    dicti_to_print[dist_name]["GRU_Att_" + str(num_to_params[test_num])] = dict()
+                    
+                if str(ws_use) not in dicti_to_print[dist_name]["GRU_Att_" + str(num_to_params[test_num])]:
+                    dicti_to_print[dist_name]["GRU_Att_" + str(num_to_params[test_num])][str(ws_use)] = dict()
+
+                dicti_to_print[dist_name]["GRU_Att_" + str(num_to_params[test_num])][str(ws_use)]["R2_wt"] = r2_pred_wt
+                dicti_to_print[dist_name]["GRU_Att_" + str(num_to_params[test_num])][str(ws_use)]["MAE_wt"] = mae_pred_wt
+                dicti_to_print[dist_name]["GRU_Att_" + str(num_to_params[test_num])][str(ws_use)]["RMSE_wt"] = rmse_pred_wt
+                dicti_to_print[dist_name]["GRU_Att_" + str(num_to_params[test_num])][str(ws_use)]["Euclid"] = np.average(vals_avg)
+                dicti_to_print[dist_name]["GRU_Att_" + str(num_to_params[test_num])][str(ws_use)]["R2"] = r2_pred
+                dicti_to_print[dist_name]["GRU_Att_" + str(num_to_params[test_num])][str(ws_use)]["MAE"] = mae_pred
+                dicti_to_print[dist_name]["GRU_Att_" + str(num_to_params[test_num])][str(ws_use)]["RMSE"] = rmse_pred
 
 save_object("attention_result/distance_predicted_new", distance_predicted_new)
+
+rv_metric = {"R2": 2, "RMSE": 6, "MAE": 6, "R2_wt": 2, "RMSE_wt": 6, "MAE_wt": 6, "Euclid": 6}
+mul_metric = {"R2": 100, "RMSE": 1, "MAE": 1, "R2_wt": 100, "RMSE_wt": 1, "MAE_wt": 1, "Euclid": 1}
+list_ws = sorted([int(x) for x in dicti_to_print["long no abs"]["GRU_Att_1"]])
+
+for metric_name_use in list(rv_metric.keys()):
+    for varname in dicti_to_print:
+        str_pr = ""
+        first_line = metric_name_use + " " + varname
+        for model_name_use in dicti_to_print[varname]:
+            for val_ws in list_ws:
+                first_line += " & $" + str(val_ws) + "$"
+            break
+        print(first_line + " \\\\ \\hline")
+        for model_name_use in dicti_to_print[varname]:
+            str_pr += model_name_use
+            for val_ws in list_ws:
+                vv = dicti_to_print[varname][model_name_use][str(val_ws)][metric_name_use] 
+                vv = np.round(vv * mul_metric[metric_name_use], rv_metric[metric_name_use])
+                str_pr += " & $" + str(vv) + "$"
+            str_pr += " \\\\ \\hline\n"
+        print(str_pr)
+
+for metric_name_use in list(rv_metric.keys()):
+    for model_name_use in dicti_to_print["long no abs"]:
+        str_pr = ""
+        first_line = metric_name_use + " " + model_name_use
+        for varname in dicti_to_print:
+            for val_ws in list_ws:
+                first_line += " & $" + str(val_ws) + "$"
+            break
+        print(first_line + " \\\\ \\hline")
+        for varname in dicti_to_print:
+            str_pr += varname
+            for val_ws in list_ws:
+                vv = dicti_to_print[varname][model_name_use][str(val_ws)][metric_name_use] 
+                vv = np.round(vv * mul_metric[metric_name_use], rv_metric[metric_name_use])
+                str_pr += " & $" + str(vv) + "$"
+            str_pr += " \\\\ \\hline\n"
+        print(str_pr)

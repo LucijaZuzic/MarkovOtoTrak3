@@ -5,8 +5,6 @@ from utilities import load_object, save_object, compare_traj_and_sample
 import math
 from sklearn.metrics import r2_score, mean_absolute_error, mean_squared_error
 
-ws_range = [2, 4, 5, 9, 19, 29]
-
 def str_convert_new(val):
     new_val = val
     power_to = 0
@@ -119,7 +117,8 @@ if not os.path.isdir("mosaic_UniTS"):
 if not os.path.isdir("mosaic_UniTS_all"):
     os.makedirs("mosaic_UniTS_all")
 
-use_draw = True
+dicti_to_print = dict()
+use_draw = False
 for metric in metric_names:
 
     distance_predicted_new[metric] = dict()
@@ -269,4 +268,61 @@ for metric in metric_names:
                 print("MAE_wt", np.round(mae_pred_wt, 6))
                 print("RMSE_wt", np.round(rmse_pred_wt, 6))
 
+                if dist_name not in dicti_to_print:
+                    dicti_to_print[dist_name] = dict()
+
+                if "UniTS" not in dicti_to_print[dist_name]:
+                    dicti_to_print[dist_name]["UniTS"] = dict()
+                    
+                if str(ws_use) not in dicti_to_print[dist_name]["UniTS"]:
+                    dicti_to_print[dist_name]["UniTS"][str(ws_use)] = dict()
+
+                dicti_to_print[dist_name]["UniTS"][str(ws_use)]["R2_wt"] = r2_pred_wt
+                dicti_to_print[dist_name]["UniTS"][str(ws_use)]["MAE_wt"] = mae_pred_wt
+                dicti_to_print[dist_name]["UniTS"][str(ws_use)]["RMSE_wt"] = rmse_pred_wt
+                dicti_to_print[dist_name]["UniTS"][str(ws_use)]["Euclid"] = np.average(vals_avg)
+                dicti_to_print[dist_name]["UniTS"][str(ws_use)]["R2"] = r2_pred
+                dicti_to_print[dist_name]["UniTS"][str(ws_use)]["MAE"] = mae_pred
+                dicti_to_print[dist_name]["UniTS"][str(ws_use)]["RMSE"] = rmse_pred
+
 save_object("UniTS_final_result/distance_predicted_new", distance_predicted_new)
+
+rv_metric = {"R2": 2, "RMSE": 6, "MAE": 6, "R2_wt": 2, "RMSE_wt": 6, "MAE_wt": 6, "Euclid": 6}
+mul_metric = {"R2": 100, "RMSE": 1, "MAE": 1, "R2_wt": 100, "RMSE_wt": 1, "MAE_wt": 1, "Euclid": 1}
+list_ws = sorted([int(x) for x in dicti_to_print["long no abs"]["UniTS"]])
+
+for metric_name_use in list(rv_metric.keys()):
+    for varname in dicti_to_print:
+        str_pr = ""
+        first_line = metric_name_use + " " + varname
+        for model_name_use in dicti_to_print[varname]:
+            for val_ws in list_ws:
+                first_line += " & $" + str(val_ws) + "$"
+            break
+        print(first_line + " \\\\ \\hline")
+        for model_name_use in dicti_to_print[varname]:
+            str_pr += model_name_use
+            for val_ws in list_ws: 
+                vv = dicti_to_print[varname][model_name_use][str(val_ws)][metric_name_use] 
+                vv = np.round(vv * mul_metric[metric_name_use], rv_metric[metric_name_use])
+                str_pr += " & $" + str(vv) + "$"
+            str_pr += " \\\\ \\hline\n"
+        print(str_pr)
+
+for metric_name_use in list(rv_metric.keys()):
+    for model_name_use in dicti_to_print["long no abs"]:
+        str_pr = ""
+        first_line = metric_name_use + " " + model_name_use
+        for varname in dicti_to_print:
+            for val_ws in list_ws:
+                first_line += " & $" + str(val_ws) + "$"
+            break
+        print(first_line + " \\\\ \\hline")
+        for varname in dicti_to_print:
+            str_pr += varname
+            for val_ws in list_ws: 
+                vv = dicti_to_print[varname][model_name_use][str(val_ws)][metric_name_use] 
+                vv = np.round(vv * mul_metric[metric_name_use], rv_metric[metric_name_use])
+                str_pr += " & $" + str(vv) + "$"
+            str_pr += " \\\\ \\hline\n"
+        print(str_pr)
