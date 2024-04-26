@@ -122,7 +122,7 @@ if not os.path.isdir("mosaic_attention"):
 if not os.path.isdir("mosaic_attention_all"):
     os.makedirs("mosaic_attention_all")
 
-use_draw = False
+use_draw = True
 
 for metric in metric_names:
 
