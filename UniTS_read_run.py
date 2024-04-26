@@ -29,7 +29,7 @@ for ws_use in ws_range:
 
         file_pd_transformed_pred = np.array(load_object("../UniTS/results/all_" + str(ws_use) + "_test/preds_transformed_" + varname)).reshape(-1)
         file_pd_transformed_true = np.array(load_object("../UniTS/results/all_" + str(ws_use) + "_test/trues_transformed_" + varname)).reshape(-1)
-        continue
+        
         dictio = dict()
         for ix_use in range(len(file_pd_transformed_true)):
             val = file_pd_transformed_true[ix_use]
