@@ -114,6 +114,9 @@ predicted_lat = load_object("attention_result/predicted_lat")
 
 distance_predicted_new = dict()
 
+if not os.path.isfile("attention_result/distance_predicted_new"):
+    distance_predicted_new = load_object("attention_result/distance_predicted_new")
+
 metric_names = ["euclidean"] 
 
 if not os.path.isdir("mosaic_attention"):
@@ -126,19 +129,23 @@ dicti_to_print = dict()
 use_draw = False
 for metric in metric_names:
 
-    distance_predicted_new[metric] = dict()
+    if metric not in distance_predicted_new:
+        distance_predicted_new[metric] = dict()
 
     for model_name in predicted_long:
 
-        distance_predicted_new[metric][model_name] = dict()
+        if model_name not in distance_predicted_new[metric]:
+            distance_predicted_new[metric][model_name] = dict()
 
         for test_num in predicted_long[model_name]:
 
-            distance_predicted_new[metric][model_name][test_num] = dict()
+            if test_num not in distance_predicted_new[metric][model_name]:
+                distance_predicted_new[metric][model_name][test_num] = dict()
 
             for dist_name in predicted_long[model_name][test_num]:
 
-                distance_predicted_new[metric][model_name][test_num][dist_name] = dict()
+                if dist_name not in distance_predicted_new[metric][model_name][test_num]:
+                    distance_predicted_new[metric][model_name][test_num][dist_name]  = dict()
                 
                 all_actual = []
                 all_predicted = []
@@ -203,7 +210,8 @@ for metric in metric_names:
                         time_actual_cumulative = time_actual_cumulative[:use_len_time]
                         time_predicted_cumulative = time_predicted_cumulative[:use_len_time]
 
-                        distance_predicted_new[metric][model_name][test_num][dist_name][k] = compare_traj_and_sample(actual_long_one, actual_lat_one, time_actual_cumulative, {"long": predicted_long_one, "lat": predicted_lat_one, "time": time_predicted_cumulative}, metric)
+                        if k not in distance_predicted_new[metric][model_name][test_num][dist_name]:
+                            distance_predicted_new[metric][model_name][test_num][dist_name][k] = compare_traj_and_sample(actual_long_one, actual_lat_one, time_actual_cumulative, {"long": predicted_long_one, "lat": predicted_lat_one, "time": time_predicted_cumulative}, metric)
                         
                         if distance_predicted_new[metric][model_name][test_num][dist_name][k] < min_dist:
                             min_k = k

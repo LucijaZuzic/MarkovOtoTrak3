@@ -3,13 +3,17 @@ import os
 from utilities import load_object, save_object, get_sides_from_angle
 from pytorch_utilities import get_XY
 
+dictangle = dict()
 def change_angle(angle, name_file):
-    
-    file_with_ride = pd.read_csv(name_file) 
-    
-    x_dir = list(file_with_ride["fields_longitude"])[0] < list(file_with_ride["fields_longitude"])[-1]
-    y_dir = list(file_with_ride["fields_latitude"])[0] < list(file_with_ride["fields_latitude"])[-1]
-
+        
+    if name_file not in dictangle:
+        file_with_ride = pd.read_csv(name_file) 
+        x_dir = list(file_with_ride["fields_longitude"])[0] < list(file_with_ride["fields_longitude"])[-1]
+        y_dir = list(file_with_ride["fields_latitude"])[0] < list(file_with_ride["fields_latitude"])[-1]
+        dictangle[name_file] = (x_dir, y_dir)
+    else:
+        x_dir, y_dir = dictangle[name_file]
+        
     new_dir = (90 - angle + 360) % 360 
     if not x_dir: 
         new_dir = (180 - new_dir + 360) % 360
