@@ -22,7 +22,7 @@ predicted_all = dict()
 y_test_all = dict()
 ws_all = dict() 
 
-ws_range = range(4, 7)
+ws_range = [4, 5, 9, 19, 29]
  
 model_name = "UniTS"
 
