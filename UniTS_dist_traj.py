@@ -5,7 +5,7 @@ from utilities import load_object, save_object, compare_traj_and_sample
 import math
 from sklearn.metrics import r2_score, mean_absolute_error, mean_squared_error
 
-ws_range = [2, 5, 6, 10, 20, 30]
+ws_range = [2, 4, 5, 9, 19, 29]
 
 def str_convert_new(val):
     new_val = val

@@ -67,11 +67,11 @@ def my_token(xv, yv, name_file):
 
 num_props = 1
 
-ws_range = [10, 20, 30]
-marking_for_range = {2: 9, 10: 10, 20: 11, 30: 12}
+ws_range = [3]
+marking_for_range = {2: 9, 10: 10, 20: 11, 30: 12, 3: 25}
 model_name = "GRU_Att"
 
-resave = False
+resave = True
 if resave:
     for filename in os.listdir("actual_train"):
 

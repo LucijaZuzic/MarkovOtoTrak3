@@ -26,7 +26,7 @@ actual_all = dict()
 y_test_all = dict()
 ws_all = dict() 
 BLEU_all = dict()
-num_to_ws = [-1, 5, 6, 5, 6, 5, 6, 5, 6, 2, 10, 20, 30, 2, 10, 20, 30, 2, 10, 20, 30, 2, 10, 20, 30]
+num_to_ws = [-1, 5, 6, 5, 6, 5, 6, 5, 6, 2, 10, 20, 30, 2, 10, 20, 30, 2, 10, 20, 30, 2, 10, 20, 30, 3, 3, 3, 3]
 model_name = "GRU_Att"
 
 for varname in os.listdir("train_attention1"):

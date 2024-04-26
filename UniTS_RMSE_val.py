@@ -5,7 +5,7 @@ from sklearn.metrics import r2_score, mean_absolute_error, mean_squared_error
 from utilities import load_object
 import numpy as np
 
-ws_range = range(4, 7)
+ws_range = [2, 4, 5, 9, 19, 29]
  
 for varname in os.listdir("final_train_pytorch"):
     

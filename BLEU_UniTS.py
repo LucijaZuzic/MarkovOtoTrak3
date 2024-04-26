@@ -25,7 +25,7 @@ predicted_all = dict()
 y_test_all = dict()
 ws_all = dict() 
 BLEU_all = dict()
-ws_range = range(4, 7)
+ws_range = [2, 4, 5, 9, 19]
 model_name = "UniTS"
 
 for varname in os.listdir("final_train_pytorch"):
