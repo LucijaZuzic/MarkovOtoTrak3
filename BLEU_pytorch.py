@@ -10,7 +10,7 @@ y_test_all = dict()
 ws_all = dict() 
 BLEU_all = dict() 
 
-ws_range = [3, 5, 6, 10, 20, 30]
+ws_range = [2, 5, 6, 10, 20, 30]
 
 hidden_range = [220]
 
