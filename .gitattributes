@@ -1,10 +1,6 @@
 # Auto detect text files and perform LF normalization
 * text=auto
 probability/* filter=lfs diff=lfs merge=lfs -text
-pytorch_result/predicted_lat filter=lfs diff=lfs merge=lfs -text
-pytorch_result/predicted_long filter=lfs diff=lfs merge=lfs -text
-pytorch_result/y_test_all filter=lfs diff=lfs merge=lfs -text
-attention_result/predicted_all filter=lfs diff=lfs merge=lfs -text
-attention_result/predicted_lat filter=lfs diff=lfs merge=lfs -text
-attention_result/predicted_long filter=lfs diff=lfs merge=lfs -text
-attention_result/y_test_all filter=lfs diff=lfs merge=lfs -text
+pytorch_result/* filter=lfs diff=lfs merge=lfs -text
+attention_result/* filter=lfs diff=lfs merge=lfs -text
+UniTS_final_result/* filter=lfs diff=lfs merge=lfs -text
