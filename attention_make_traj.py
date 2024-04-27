@@ -65,7 +65,7 @@ for varname in os.listdir("train_attention1"):
     if model_name not in ws_all[varname]:
         ws_all[varname][model_name] = dict()
 
-    for test_num in range(24, 25):
+    for test_num in range(25, 29):
         ws_use = num_to_ws[test_num]
 
         if test_num not in predicted_all[varname][model_name]:
@@ -167,7 +167,7 @@ if model_name not in predicted_long:
 if model_name not in predicted_lat:
     predicted_lat[model_name] = dict()  
 
-for test_num in range(24, 25):
+for test_num in range(24, 29):
 
     if test_num not in actual_long[model_name]:
         actual_long[model_name][test_num] = dict()
