@@ -121,7 +121,7 @@ if not os.path.isdir("mosaic_UniTS_all"):
     os.makedirs("mosaic_UniTS_all")
 
 dicti_to_print = dict()
-use_draw = False
+use_draw = True
 for metric in metric_names:
 
     if metric not in distance_predicted_new:

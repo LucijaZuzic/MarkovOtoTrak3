@@ -26,12 +26,12 @@ predicted_all = dict()
 y_test_all = dict()
 ws_all = dict() 
 
-ws_range = [2, 4, 5, 9, 19, 29]
+ws_range = [3, 6, 10, 20, 30]
  
 model_name = "UniTS"
 
 if os.path.isfile("UniTS_final_result/predicted_all"):
-    predicted_all = load_object("UniTS_result/predicted_all")
+    predicted_all = load_object("UniTS_final_result/predicted_all")
     
 if os.path.isfile("UniTS_final_result/y_test_all"):
     y_test_all = load_object("UniTS_final_result/y_test_all")

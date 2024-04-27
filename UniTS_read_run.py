@@ -11,7 +11,7 @@ def find_nearest(array,value):
     else:
         return array[idx]
     
-ws_range = [2, 4, 5, 9, 19, 29]
+ws_range = [2, 3, 4, 5, 6, 9, 10, 19, 20, 29, 30]
 
 for ws_use in ws_range:
 
