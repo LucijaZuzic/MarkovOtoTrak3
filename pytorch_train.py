@@ -9,9 +9,9 @@ from pytorch_utilities import get_XY, print_predictions, PyTorchGRUModel, PyTorc
 
 num_props = 1
 
-ws_range = [7]
+ws_range = [30]
 
-hidden_range = [220]
+hidden_range = [100]
 
 model_list = ["GRU", "LSTM", "RNN"]
 
@@ -73,19 +73,16 @@ for filename in os.listdir("actual_train"):
                 if not os.path.isdir("final_train_pytorch/" + varname + "/predictions/test/" + model_name):
                     os.makedirs("final_train_pytorch/" + varname + "/predictions/test/" + model_name)
             
-                pytorch_model.eval()
-
-                torch.save(pytorch_model.state_dict(), "final_train_pytorch/" + varname + "/models/" + model_name + "/" + varname + "_" + model_name + "_ws_" + str(ws_use) + "_hidden_" + str(hidden_use) + ".pth")
-
                 train_dataset = TensorDataset(torch.tensor(x_train_val_all).float(),  torch.tensor(y_train_val_all).float())
                 train_loader = DataLoader(train_dataset, batch_size=600, shuffle=True)
 
                 criterion = nn.MSELoss()
                 optimizer = optim.Adam(pytorch_model.parameters())
 
-                num_epochs = 70
+                num_epochs = 20
                 for epoch in range(num_epochs):
                     for inputs, targets in train_loader:
+                        pytorch_model.train()
                         optimizer.zero_grad()
                         outputs = pytorch_model(inputs)
                         loss = criterion(outputs, targets)
@@ -93,6 +90,8 @@ for filename in os.listdir("actual_train"):
                         optimizer.step()
 
                 pytorch_model.eval()
+
+                torch.save(pytorch_model.state_dict(), "final_train_pytorch/" + varname + "/models/" + model_name + "/" + varname + "_" + model_name + "_ws_" + str(ws_use) + "_hidden_" + str(hidden_use) + ".pth")
 
                 with torch.no_grad():
 

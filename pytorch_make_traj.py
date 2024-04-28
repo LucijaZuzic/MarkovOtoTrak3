@@ -28,7 +28,7 @@ ws_all = dict()
 
 ws_range = [3]
 
-hidden_range = [220]
+hidden_range = [100]
 
 model_list = ["GRU", "LSTM", "RNN"]
 

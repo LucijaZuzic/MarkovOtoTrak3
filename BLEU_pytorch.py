@@ -12,7 +12,7 @@ BLEU_all = dict()
 
 ws_range = [2, 5, 6, 10, 20, 30]
 
-hidden_range = [220]
+hidden_range = [100]
 
 model_list = ["GRU", "LSTM", "RNN"]
 

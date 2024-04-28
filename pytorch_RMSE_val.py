@@ -7,7 +7,7 @@ import numpy as np
 
 ws_range = [2, 5, 6, 10, 20, 30]
 
-hidden_range = [220]
+hidden_range = [100]
 
 model_list = ["GRU", "LSTM", "RNN"]
 
@@ -73,7 +73,7 @@ for varname in os.listdir("final_train_pytorch"):
 
 rv_metric = {"R2": 2, "RMSE": 6, "MAE": 6, "NRMSE": 2}
 mul_metric = {"R2": 100, "RMSE": 1, "MAE": 1, "NRMSE": 100}
-list_ws = sorted([int(x) for x in dicti_to_print["speed"]["RNN_220"]])
+list_ws = sorted([int(x) for x in dicti_to_print["speed"]["RNN_100"]])
 
 for metric_name_use in list(rv_metric.keys()):
     for varname in dicti_to_print:

@@ -302,7 +302,7 @@ save_object("pytorch_result/distance_predicted_new", distance_predicted_new)
 
 rv_metric = {"R2": 2, "RMSE": 6, "MAE": 6, "R2_wt": 2, "RMSE_wt": 6, "MAE_wt": 6, "Euclid": 6}
 mul_metric = {"R2": 100, "RMSE": 1, "MAE": 1, "R2_wt": 100, "RMSE_wt": 1, "MAE_wt": 1, "Euclid": 1}
-list_ws = sorted([int(x) for x in dicti_to_print["long no abs"]["RNN_220"]])
+list_ws = sorted([int(x) for x in dicti_to_print["long no abs"]["RNN_100"]])
 
 for metric_name_use in list(rv_metric.keys()):
     for varname in dicti_to_print:
