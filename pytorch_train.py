@@ -18,7 +18,7 @@ model_list = ["GRU", "LSTM", "RNN"]
 for filename in os.listdir("actual_train"):
 
     varname = filename.replace("actual_train_", "")
-    if varname != "time":
+    if varname == "time":
         continue
 
     file_object_train_val = load_object("actual_train_val/actual_train_val_" + varname)
