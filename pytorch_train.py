@@ -9,15 +9,17 @@ from pytorch_utilities import get_XY, print_predictions, PyTorchGRUModel, PyTorc
 
 num_props = 1
 
-ws_range = [7]
+ws_range = [4]
 
 hidden_range = [220]
 
-model_list = ["GRU", "LSTM", "RNN"]
+model_list = ["RNN"]
 
 for filename in os.listdir("actual_train"):
 
     varname = filename.replace("actual_train_", "")
+    if varname != "time":
+        continue
 
     file_object_train_val = load_object("actual_train_val/actual_train_val_" + varname)
     file_object_test = load_object("actual/actual_" + varname)
