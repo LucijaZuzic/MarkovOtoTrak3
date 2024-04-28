@@ -67,8 +67,8 @@ def my_token(xv, yv, name_file):
 
 num_props = 1
 
-ws_range = [3]
-marking_for_range = {2: 21, 10: 22, 20: 23, 30: 24, 3: 28}
+ws_range = [4]
+marking_for_range = {2: 21, 10: 22, 20: 23, 30: 24, 3: 28, 4: 32}
 model_name = "GRU_Att"
 
 resave = False
