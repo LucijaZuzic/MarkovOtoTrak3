@@ -9,11 +9,11 @@ from pytorch_utilities import get_XY, print_predictions, PyTorchGRUModel, PyTorc
 
 num_props = 1
 
-ws_range = [4]
+ws_range = [7]
 
 hidden_range = [220]
 
-model_list = ["RNN"]
+model_list = ["GRU", "LSTM", "RNN"]
 
 for filename in os.listdir("actual_train"):
 
