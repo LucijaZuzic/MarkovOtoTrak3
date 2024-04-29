@@ -9,7 +9,7 @@ from pytorch_utilities import get_XY, print_predictions, PyTorchGRUModel, PyTorc
 
 num_props = 1
 
-ws_range = [7]
+ws_range = [8]
 
 hidden_range = [100]
 
