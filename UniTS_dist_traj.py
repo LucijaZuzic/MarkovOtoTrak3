@@ -109,7 +109,7 @@ predicted_lat = load_object("UniTS_final_result/predicted_lat")
 
 distance_predicted_new = dict()
 
-if not os.path.isfile("UniTS_final_result/distance_predicted_new"):
+if os.path.isfile("UniTS_final_result/distance_predicted_new"):
     distance_predicted_new = load_object("UniTS_final_result/distance_predicted_new")
 
 metric_names = ["euclidean"] 

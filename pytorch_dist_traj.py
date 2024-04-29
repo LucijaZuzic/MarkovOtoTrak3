@@ -109,7 +109,7 @@ predicted_lat = load_object("pytorch_result/predicted_lat")
 
 distance_predicted_new = dict()
 
-if not os.path.isfile("pytorch_result/distance_predicted_new"):
+if os.path.isfile("pytorch_result/distance_predicted_new"):
     distance_predicted_new = load_object("pytorch_result/distance_predicted_new")
 
 metric_names = ["euclidean"] 
@@ -121,7 +121,7 @@ if not os.path.isdir("mosaic_pytorch_all"):
     os.makedirs("mosaic_pytorch_all")
 
 dicti_to_print = dict()
-use_draw = False
+use_draw = True
 for metric in metric_names:
 
     if metric not in distance_predicted_new:
@@ -225,7 +225,7 @@ for metric in metric_names:
                             vehicle = split_file_veh[0].replace("Vehicle_", "")
                             ride = split_file_veh[-1].replace("events_", "").replace(".csv", "")
 
-                            if use_draw or ws_use == 3:
+                            if use_draw:
 
                                 filename = "mosaic_pytorch_all/Vehicle_" + vehicle + "_events_" + ride + "_" + model_name + "_" + str(ws_use) + "_" + str(hidden_use) + "_" + dist_name + "_" + dist_name.replace("long", "lat") + "_test_mosaic.png"
                                 draw_mosaic_one(actual_long_one, actual_lat_one, predicted_long_one, predicted_lat_one, k, model_name, filename, ws_use, hidden_use, dist_name)
@@ -246,12 +246,12 @@ for metric in metric_names:
                                 predicted_long_lat.append([predicted_long_one[ix_use_len], predicted_lat_one[ix_use_len]])
                                 predicted_long_lat_time.append([predicted_long_one[ix_use_len], predicted_lat_one[ix_use_len], time_predicted_cumulative[ix_use_len]])
 
-                        if use_draw or ws_use == 3:
+                        if use_draw:
 
                             filename_veh = "mosaic_pytorch/Vehicle_" + str(v) + "_" + model_name + "_" + str(ws_use) + "_" + str(hidden_use) + "_" + dist_name.replace("long", "lat") + "_test_mosaic.png"
                             draw_mosaic(all_actual_vehicle, all_predicted, filename_veh)
 
-                    if use_draw or ws_use == 3:
+                    if use_draw:
 
                         filename = "mosaic_pytorch/all_" + model_name + "_" + str(ws_use) + "_" + str(hidden_use) + "_" + dist_name.replace("long", "lat") + "_test_mosaic.png"
                         draw_mosaic(all_actual, all_predicted, filename)
