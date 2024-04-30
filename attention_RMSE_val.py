@@ -121,7 +121,7 @@ for metric_name_use in list(rv_metric.keys()):
             break
         print(first_line + " \\\\ \\hline")
         for model_name_use in dicti_to_print[varname]:
-            str_pr += model_name_use
+            str_pr += varname + " " + metric_name_use + " " + model_name_use
             for val_ws in list_ws: 
                 vv = dicti_to_print[varname][model_name_use][str(val_ws)][metric_name_use] 
                 vv = np.round(vv * mul_metric[metric_name_use], rv_metric[metric_name_use])
@@ -139,7 +139,7 @@ for metric_name_use in list(rv_metric.keys()):
             break
         print(first_line + " \\\\ \\hline")
         for varname in dicti_to_print:
-            str_pr += varname
+            str_pr += varname + " " + metric_name_use + " " + model_name_use
             for val_ws in list_ws: 
                 vv = dicti_to_print[varname][model_name_use][str(val_ws)][metric_name_use] 
                 vv = np.round(vv * mul_metric[metric_name_use], rv_metric[metric_name_use])
