@@ -294,6 +294,10 @@ mul_metric = {"R2": 100, "RMSE": 1, "MAE": 1, "R2_wt": 100, "RMSE_wt": 1, "MAE_w
 list_ws = sorted([int(x) for x in dicti_to_print["long no abs"]["UniTS"]])
 list_ws = [2, 3, 4, 5, 6, 7, 8, 9, 10, 20, 30]
 
+dicti_all_traj = dict()
+if os.path.isfile("dicti_all_traj"):
+    dicti_all_traj = load_object("dicti_all_traj")
+
 for metric_name_use in list(rv_metric.keys()):
     for varname in dicti_to_print:
         str_pr = ""
@@ -306,7 +310,16 @@ for metric_name_use in list(rv_metric.keys()):
         for model_name_use in dicti_to_print[varname]:
             str_pr += varname + " " + metric_name_use + " " + model_name_use
             for val_ws in list_ws: 
-                vv = dicti_to_print[varname][model_name_use][str(val_ws)][metric_name_use] 
+                vv = dicti_to_print[varname][model_name_use][str(val_ws)][metric_name_use]  
+                if varname not in dicti_all_traj:
+                    dicti_all_traj[varname] = dict()
+                if model_name_use not in dicti_all_traj[varname]:
+                    dicti_all_traj[varname][model_name_use] = dict()
+                if str(val_ws) not in dicti_all_traj[varname][model_name_use]:
+                    dicti_all_traj[varname][model_name_use][str(val_ws)] = dict()
+                if metric_name_use not in dicti_all_traj[varname][model_name_use][str(val_ws)]:
+                    dicti_all_traj[varname][model_name_use][str(val_ws)][metric_name_use] = dict()
+                dicti_all_traj[varname][model_name_use][str(val_ws)][metric_name_use] = vv
                 vv = np.round(vv * mul_metric[metric_name_use], rv_metric[metric_name_use])
                 str_pr += " & $" + str(vv) + "$"
             str_pr += " \\\\ \\hline\n"
@@ -324,8 +337,19 @@ for metric_name_use in list(rv_metric.keys()):
         for varname in dicti_to_print:
             str_pr += varname + " " + metric_name_use + " " + model_name_use
             for val_ws in list_ws: 
-                vv = dicti_to_print[varname][model_name_use][str(val_ws)][metric_name_use] 
+                vv = dicti_to_print[varname][model_name_use][str(val_ws)][metric_name_use]  
+                if varname not in dicti_all_traj:
+                    dicti_all_traj[varname] = dict()
+                if model_name_use not in dicti_all_traj[varname]:
+                    dicti_all_traj[varname][model_name_use] = dict()
+                if str(val_ws) not in dicti_all_traj[varname][model_name_use]:
+                    dicti_all_traj[varname][model_name_use][str(val_ws)] = dict()
+                if metric_name_use not in dicti_all_traj[varname][model_name_use][str(val_ws)]:
+                    dicti_all_traj[varname][model_name_use][str(val_ws)][metric_name_use] = dict()
+                dicti_all_traj[varname][model_name_use][str(val_ws)][metric_name_use] = vv
                 vv = np.round(vv * mul_metric[metric_name_use], rv_metric[metric_name_use])
                 str_pr += " & $" + str(vv) + "$"
             str_pr += " \\\\ \\hline\n"
         print(str_pr)
+
+save_object("dicti_all_traj", dicti_all_traj)

@@ -1,6 +1,6 @@
 import pandas as pd
 import os
-from utilities import load_object
+from utilities import load_object, save_object
 import math
 import numpy as np
 from sklearn.metrics import mean_squared_error, r2_score, mean_absolute_error
@@ -111,6 +111,10 @@ rv_metric = {"R2": 2, "RMSE": 6, "MAE": 6, "NRMSE": 2}
 mul_metric = {"R2": 100, "RMSE": 1, "MAE": 1, "NRMSE": 100}
 list_ws = sorted([int(x) for x in dicti_to_print["speed"]["GRU_Att_1"]])
 
+dicti_all = dict()
+if os.path.isfile("dicti_all"):
+    dicti_all = load_object("dicti_all")
+
 for metric_name_use in list(rv_metric.keys()):
     for varname in dicti_to_print:
         str_pr = ""
@@ -124,6 +128,15 @@ for metric_name_use in list(rv_metric.keys()):
             str_pr += varname + " " + metric_name_use + " " + model_name_use
             for val_ws in list_ws: 
                 vv = dicti_to_print[varname][model_name_use][str(val_ws)][metric_name_use] 
+                if varname not in dicti_all:
+                    dicti_all[varname] = dict()
+                if model_name_use not in dicti_all[varname]:
+                    dicti_all[varname][model_name_use] = dict()
+                if str(val_ws) not in dicti_all[varname][model_name_use]:
+                    dicti_all[varname][model_name_use][str(val_ws)] = dict()
+                if metric_name_use not in dicti_all[varname][model_name_use][str(val_ws)]:
+                    dicti_all[varname][model_name_use][str(val_ws)][metric_name_use] = dict()
+                dicti_all[varname][model_name_use][str(val_ws)][metric_name_use] = vv
                 vv = np.round(vv * mul_metric[metric_name_use], rv_metric[metric_name_use])
                 str_pr += " & $" + str(vv) + "$"
             str_pr += " \\\\ \\hline\n"
@@ -142,7 +155,18 @@ for metric_name_use in list(rv_metric.keys()):
             str_pr += varname + " " + metric_name_use + " " + model_name_use
             for val_ws in list_ws: 
                 vv = dicti_to_print[varname][model_name_use][str(val_ws)][metric_name_use] 
+                if varname not in dicti_all:
+                    dicti_all[varname] = dict()
+                if model_name_use not in dicti_all[varname]:
+                    dicti_all[varname][model_name_use] = dict()
+                if str(val_ws) not in dicti_all[varname][model_name_use]:
+                    dicti_all[varname][model_name_use][str(val_ws)] = dict()
+                if metric_name_use not in dicti_all[varname][model_name_use][str(val_ws)]:
+                    dicti_all[varname][model_name_use][str(val_ws)][metric_name_use] = dict()
+                dicti_all[varname][model_name_use][str(val_ws)][metric_name_use] = vv
                 vv = np.round(vv * mul_metric[metric_name_use], rv_metric[metric_name_use])
                 str_pr += " & $" + str(vv) + "$"
             str_pr += " \\\\ \\hline\n"
         print(str_pr)
+
+save_object("dicti_all", dicti_all)
