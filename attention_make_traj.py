@@ -25,7 +25,7 @@ def change_angle(angle, name_file):
 predicted_all = dict()
 y_test_all = dict()
 ws_all = dict() 
-num_to_ws = [-1, 5, 6, 5, 6, 5, 6, 5, 6, 2, 10, 20, 30, 2, 10, 20, 30, 2, 10, 20, 30, 2, 10, 20, 30, 3, 3, 3, 3]
+num_to_ws = [-1, 5, 6, 5, 6, 5, 6, 5, 6, 2, 10, 20, 30, 2, 10, 20, 30, 2, 10, 20, 30, 2, 10, 20, 30, 3, 3, 3, 3, 4, 4, 4, 4, 7, 7, 7, 7, 8, 8, 8, 8, 9, 9, 9, 9]
 model_name = "GRU_Att"
 
 if os.path.isfile("attention_result/predicted_all"):
@@ -65,7 +65,7 @@ for varname in os.listdir("train_attention1"):
     if model_name not in ws_all[varname]:
         ws_all[varname][model_name] = dict()
 
-    for test_num in range(25, 29):
+    for test_num in range(1, 45):
         ws_use = num_to_ws[test_num]
 
         if test_num not in predicted_all[varname][model_name]:
@@ -167,7 +167,7 @@ if model_name not in predicted_long:
 if model_name not in predicted_lat:
     predicted_lat[model_name] = dict()  
 
-for test_num in range(24, 29):
+for test_num in range(1, 45):
 
     if test_num not in actual_long[model_name]:
         actual_long[model_name][test_num] = dict()

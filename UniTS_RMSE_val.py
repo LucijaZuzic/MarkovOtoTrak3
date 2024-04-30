@@ -5,7 +5,7 @@ from sklearn.metrics import r2_score, mean_absolute_error, mean_squared_error
 from utilities import load_object
 import numpy as np
 
-ws_range = [4, 5, 9, 19, 29]
+ws_range = [2, 3, 4, 5, 6, 7, 8, 9, 10, 19, 20, 29, 30]
  
 dicti_to_print = dict()
 

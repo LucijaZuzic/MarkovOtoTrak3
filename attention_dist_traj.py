@@ -5,8 +5,8 @@ from utilities import load_object, save_object, compare_traj_and_sample
 import math
 from sklearn.metrics import r2_score, mean_absolute_error, mean_squared_error
 
-num_to_ws = [-1, 5, 6, 5, 6, 5, 6, 5, 6, 2, 10, 20, 30, 2, 10, 20, 30, 2, 10, 20, 30, 2, 10, 20, 30, 3, 3, 3, 3]
-num_to_params = [-1, 1, 1, 2, 2, 3, 3, 4, 4, 1, 1, 1, 1, 2, 2, 2, 2, 3, 3, 3, 3, 4, 4, 4, 4, 1, 2, 3, 4]
+num_to_ws = [-1, 5, 6, 5, 6, 5, 6, 5, 6, 2, 10, 20, 30, 2, 10, 20, 30, 2, 10, 20, 30, 2, 10, 20, 30, 3, 3, 3, 3, 4, 4, 4, 4, 7, 7, 7, 7, 8, 8, 8, 8, 9, 9, 9, 9]
+num_to_params = [-1, 1, 1, 2, 2, 3, 3, 4, 4, 1, 1, 1, 1, 2, 2, 2, 2, 3, 3, 3, 3, 4, 4, 4, 4, 1, 2, 3, 4, 1, 2, 3, 4, 1, 2, 3, 4, 1, 2, 3, 4, 1, 2, 3, 4]
 
 def str_convert_new(val):
     new_val = val
@@ -126,7 +126,7 @@ if not os.path.isdir("mosaic_attention_all"):
     os.makedirs("mosaic_attention_all")
 
 dicti_to_print = dict()
-use_draw = False
+use_draw = True
 for metric in metric_names:
 
     if metric not in distance_predicted_new:
@@ -225,7 +225,7 @@ for metric in metric_names:
                         vehicle = split_file_veh[0].replace("Vehicle_", "")
                         ride = split_file_veh[-1].replace("events_", "").replace(".csv", "")
 
-                        if use_draw or int(test_num) > 24:
+                        if use_draw:
                             
                             filename = "mosaic_attention_all/Vehicle_" + vehicle + "_events_" + ride + "_" + model_name + "_" + str(test_num) + "_" + dist_name + "_" + dist_name.replace("long", "lat") + "_test_mosaic.png"
                             draw_mosaic_one(actual_long_one, actual_lat_one, predicted_long_one, predicted_lat_one, k, model_name, filename, test_num, dist_name)
@@ -246,12 +246,12 @@ for metric in metric_names:
                             predicted_long_lat.append([predicted_long_one[ix_use_len], predicted_lat_one[ix_use_len]])
                             predicted_long_lat_time.append([predicted_long_one[ix_use_len], predicted_lat_one[ix_use_len], time_predicted_cumulative[ix_use_len]])
                     
-                    if use_draw or int(test_num) > 24:
+                    if use_draw:
 
                         filename_veh = "mosaic_attention/Vehicle_" + str(v) + "_" + model_name + "_" + str(test_num) + "_" + dist_name.replace("long", "lat") + "_test_mosaic.png"
                         draw_mosaic(all_actual_vehicle, all_predicted, filename_veh)
 
-                if use_draw or int(test_num) > 24:
+                if use_draw:
 
                     filename = "mosaic_attention/all_" + model_name + "_" + str(test_num) + "_" + dist_name.replace("long", "lat") + "_test_mosaic.png"
                     draw_mosaic(all_actual, all_predicted, filename)
