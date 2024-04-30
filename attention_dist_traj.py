@@ -126,7 +126,7 @@ if not os.path.isdir("mosaic_attention_all"):
     os.makedirs("mosaic_attention_all")
 
 dicti_to_print = dict()
-use_draw = True
+use_draw = False
 for metric in metric_names:
 
     if metric not in distance_predicted_new:
@@ -273,14 +273,8 @@ for metric in metric_names:
 
                 rmse_pred = math.sqrt(mean_squared_error(actual_long_lat, predicted_long_lat))
                 
-                print("R2", np.round(r2_pred * 100, 2))
-                print("MAE", np.round(mae_pred, 6))
-                print("RMSE", np.round(rmse_pred, 6))
+                print("R2", np.round(r2_pred * 100, 2), "MAE", np.round(mae_pred, 6), "RMSE", np.round(rmse_pred, 6), "R2_wt", np.round(r2_pred_wt * 100, 2), "MAE_wt", np.round(mae_pred_wt, 6), "RMSE_wt", np.round(rmse_pred_wt, 6))
 
-                print("R2_wt", np.round(r2_pred_wt * 100, 2))
-                print("MAE_wt", np.round(mae_pred_wt, 6))
-                print("RMSE_wt", np.round(rmse_pred_wt, 6))
-                
                 ws_use = num_to_ws[test_num]
 
                 if dist_name not in dicti_to_print:
