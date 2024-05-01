@@ -104,7 +104,7 @@ for varname in os.listdir("train_attention1"):
         dicti_to_print[varname][model_name + "_" + str(num_to_params[test_ix[mini_ix_val]])][str(ws_use)]["NRMSE"] = final_test_NRMSE[mini_ix_val] 
         dicti_to_print[varname][model_name + "_" + str(num_to_params[test_ix[mini_ix_val]])][str(ws_use)]["RMSE"] = final_test_RMSE[mini_ix_val] 
         dicti_to_print[varname][model_name + "_" + str(num_to_params[test_ix[mini_ix_val]])][str(ws_use)]["R2"] = final_test_R2[mini_ix_val]  
-        dicti_to_print[varname][model_name + "_" + str(num_to_params[test_ix[mini_ix_val]])][str(ws_use)]["MAE"] = final_test_R2[mini_ix_val]  
+        dicti_to_print[varname][model_name + "_" + str(num_to_params[test_ix[mini_ix_val]])][str(ws_use)]["MAE"] = final_test_MAE[mini_ix_val]  
         print(ws_use, num_to_params[test_ix[mini_ix_val]], np.round(unk_arr[mini_ix_val] * 100, 4), np.round(final_test_NRMSE[mini_ix_val] * 100, 2), np.round(final_test_R2[mini_ix_val] * 100, 2), np.round(final_test_MAE[mini_ix_val], 6), np.round(final_test_RMSE[mini_ix_val], 6))
         
 rv_metric = {"R2": 2, "RMSE": 6, "MAE": 6, "NRMSE": 2}

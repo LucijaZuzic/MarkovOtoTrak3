@@ -68,7 +68,7 @@ for varname in os.listdir("final_train_pytorch"):
         dicti_to_print[varname][model_arr[mini_ix_val] + "_" + str(hidden_arr[mini_ix_val])][str(ws_arr[mini_ix_val])]["NRMSE"] = final_test_NRMSE[mini_ix_val] 
         dicti_to_print[varname][model_arr[mini_ix_val] + "_" + str(hidden_arr[mini_ix_val])][str(ws_arr[mini_ix_val])]["RMSE"] = final_test_RMSE[mini_ix_val] 
         dicti_to_print[varname][model_arr[mini_ix_val] + "_" + str(hidden_arr[mini_ix_val])][str(ws_arr[mini_ix_val])]["R2"] = final_test_R2[mini_ix_val]  
-        dicti_to_print[varname][model_arr[mini_ix_val] + "_" + str(hidden_arr[mini_ix_val])][str(ws_arr[mini_ix_val])]["MAE"] = final_test_R2[mini_ix_val]  
+        dicti_to_print[varname][model_arr[mini_ix_val] + "_" + str(hidden_arr[mini_ix_val])][str(ws_arr[mini_ix_val])]["MAE"] = final_test_MAE[mini_ix_val]  
         print(model_arr[mini_ix_val], hidden_arr[mini_ix_val], ws_arr[mini_ix_val], np.round(final_test_NRMSE[mini_ix_val] * 100, 2), np.round(final_test_R2[mini_ix_val] * 100, 2), np.round(final_test_MAE[mini_ix_val], 6), np.round(final_test_RMSE[mini_ix_val], 6))
 
 rv_metric = {"R2": 2, "RMSE": 6, "MAE": 6, "NRMSE": 2}

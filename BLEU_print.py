@@ -1,4 +1,4 @@
-from utilities import load_object
+from utilities import load_object, save_object
 import numpy as np
 
 dicti_all = dict()
@@ -169,3 +169,5 @@ for metric_name_use in list(metric_dicti.keys()):
             str_pr = str_pr.replace("$" + str(max_col[val_ws]) + "$", "$\\mathbf{" + str(max_col[val_ws]) + "}$") 
         print(first_line + " \\\\ \\hline")
         print(str_pr)
+
+save_object("dicti_all_BLEU", dicti_all)
