@@ -20,7 +20,7 @@ for metric_name_use in list(metric_dicti.keys()):
                 set_values[val_ws] = set()
             max_col = dict()
             for val_ws in list_ws:
-                max_col[val_ws] = 0
+                max_col[val_ws] = -1000000
             min_col = dict()
             for val_ws in list_ws:
                 min_col[val_ws] = 1000000
@@ -87,7 +87,7 @@ for metric_name_use in list(metric_dicti.keys()):
                 set_values[val_ws] = set()
             max_col = dict()
             for val_ws in list_ws:
-                max_col[val_ws] = 0
+                max_col[val_ws] = -1000000
             min_col = dict()
             for val_ws in list_ws:
                 min_col[val_ws] = 1000000
