@@ -66,10 +66,10 @@ for metric_name_use in list(metric_dicti.keys()):
                 break
         if "R2" in metric_name_use:
             for val_ws in list_ws:
-                str_pr = str_pr.replace(str(max_col[val_ws]), "\\mathbf{" + str(max_col[val_ws]) + "}") 
+                str_pr = str_pr.replace("$" + str(max_col[val_ws]) + "$", "$\\mathbf{" + str(max_col[val_ws]) + "}$") 
         else:
             for val_ws in list_ws:
-                str_pr = str_pr.replace(str(min_col[val_ws]), "\\mathbf{" + str(min_col[val_ws]) + "}")
+                str_pr = str_pr.replace("$" + str(min_col[val_ws]) + "$", "$\\mathbf{" + str(min_col[val_ws]) + "}$") 
         #print(first_line + " \\\\ \\hline")
         #print(str_pr) 
 
@@ -133,9 +133,9 @@ for metric_name_use in list(metric_dicti.keys()):
                 break
         if "R2" in metric_name_use:
             for val_ws in list_ws:
-                str_pr = str_pr.replace(str(max_col[val_ws]), "\\mathbf{" + str(max_col[val_ws]) + "}") 
+                str_pr = str_pr.replace("$" + str(max_col[val_ws]) + "$", "$\\mathbf{" + str(max_col[val_ws]) + "}$") 
         else:
             for val_ws in list_ws:
-                str_pr = str_pr.replace(str(min_col[val_ws]), "\\mathbf{" + str(min_col[val_ws]) + "}") 
+                str_pr = str_pr.replace("$" + str(min_col[val_ws]) + "$", "$\\mathbf{" + str(min_col[val_ws]) + "}$") 
         print(first_line + " \\\\ \\hline")
         print(str_pr)
