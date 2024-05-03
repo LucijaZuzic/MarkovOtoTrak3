@@ -24,11 +24,11 @@ for ws_use in ws_range:
         file_pd = pd.read_csv("csv_data/dataset/" + str(ws_use) + "/" + varname + "/newdata_TEST.csv", index_col= False)
         OT_vals = [list(file_pd["OT"][ix_sth-4:ix_sth+1]) for ix_sth in range(4, len(file_pd["OT"]), 5)]
          
-        file_pd_pred = np.array(load_object("../UniTS/results/all_" + str(ws_use) + "_test/preds_" + varname)).reshape(-1)
-        file_pd_true = np.array(load_object("../UniTS/results/all_" + str(ws_use) + "_test/trues_" + varname)).reshape(-1)
+        file_pd_pred = np.array(load_object("../UniTS3/results/all_" + str(ws_use) + "_test/preds_" + varname)).reshape(-1)
+        file_pd_true = np.array(load_object("../UniTS3/results/all_" + str(ws_use) + "_test/trues_" + varname)).reshape(-1)
 
-        file_pd_transformed_pred = np.array(load_object("../UniTS/results/all_" + str(ws_use) + "_test/preds_transformed_" + varname)).reshape(-1)
-        file_pd_transformed_true = np.array(load_object("../UniTS/results/all_" + str(ws_use) + "_test/trues_transformed_" + varname)).reshape(-1)
+        file_pd_transformed_pred = np.array(load_object("../UniTS3/results/all_" + str(ws_use) + "_test/preds_transformed_" + varname)).reshape(-1)
+        file_pd_transformed_true = np.array(load_object("../UniTS3/results/all_" + str(ws_use) + "_test/trues_transformed_" + varname)).reshape(-1)
         
         dictio = dict()
         for ix_use in range(len(file_pd_transformed_true)):
