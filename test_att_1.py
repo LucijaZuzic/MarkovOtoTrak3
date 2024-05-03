@@ -71,7 +71,7 @@ ws_range = [15, 19, 25, 29]
 marking_for_range = {2: 9, 10: 10, 20: 11, 30: 12, 3: 25, 4: 29, 7: 33, 8: 37, 9: 41, 15: 45, 19: 49, 25: 53, 29: 57}
 model_name = "GRU_Att"
 
-resave = True
+resave = False
 if resave:
     for filename in os.listdir("actual_train"):
 
@@ -154,6 +154,8 @@ if train_a_model:
     for filename in os.listdir("actual_train"):
         for ws_use in ws_range:
             varname = filename.replace("actual_train_", "")
+            if varname == "direction":
+                continue
 
             src_field, trg_field = build_fields()
             train_set, val_set, test_set = get_datasets(train_path="tokenized_data/" + varname + "/" + varname + "_train_" + str(ws_use) + ".csv", 
