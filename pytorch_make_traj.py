@@ -26,7 +26,7 @@ predicted_all = dict()
 y_test_all = dict()
 ws_all = dict() 
 
-ws_range = [2, 3, 4, 5, 6, 7, 8, 9, 10, 20, 30]
+ws_range = [2, 3, 4, 5, 6, 7, 8, 9, 10, 15, 19, 20, 25, 29, 30]
 
 hidden_range = [100]
 

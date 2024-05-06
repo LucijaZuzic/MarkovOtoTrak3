@@ -4,7 +4,7 @@ import numpy as np
 dicti_all = load_object("dicti_all_traj")
 ord_metric = ["GRU_100", "RNN_100", "LSTM_100", "GRU_Att_1", "GRU_Att_2", "GRU_Att_3", "GRU_Att_4", "UniTS"]
 metric_dicti = {"Euclid": 0, "R2": 2, "MAE": 0, "RMSE": 0, "R2_wt": 2, "MAE_wt": 0, "RMSE_wt": 0}
-list_ws = [2, 3, 4, 5, 6, 7, 8, 9, 10, 20, 30]
+list_ws = [2, 3, 4, 5, 6, 7, 8, 9, 10, 15, 19, 20, 25, 29, 30]
 
 for metric_name_use in list(metric_dicti.keys()):
     for model_name_use in ord_metric:

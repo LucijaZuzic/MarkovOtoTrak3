@@ -3,8 +3,9 @@ import numpy as np
 
 dicti_all = dict()
 
-num_to_ws = [-1, 5, 6, 5, 6, 5, 6, 5, 6, 2, 10, 20, 30, 2, 10, 20, 30, 2, 10, 20, 30, 2, 10, 20, 30, 3, 3, 3, 3, 4, 4, 4, 4, 7, 7, 7, 7, 8, 8, 8, 8, 9, 9, 9, 9]
-num_to_params = [-1, 1, 1, 2, 2, 3, 3, 4, 4, 1, 1, 1, 1, 2, 2, 2, 2, 3, 3, 3, 3, 4, 4, 4, 4, 1, 2, 3, 4, 1, 2, 3, 4, 1, 2, 3, 4, 1, 2, 3, 4, 1, 2, 3, 4]
+num_to_ws = [-1, 5, 6, 5, 6, 5, 6, 5, 6, 2, 10, 20, 30, 2, 10, 20, 30, 2, 10, 20, 30, 2, 10, 20, 30, 3, 3, 3, 3, 4, 4, 4, 4, 7, 7, 7, 7, 8, 8, 8, 8, 9, 9, 9, 9, 15, 15, 15, 15, 19, 19, 19, 19, 25, 25, 25, 25, 29, 29, 29, 29]
+
+num_to_params = [-1, 1, 1, 2, 2, 3, 3, 4, 4, 1, 1, 1, 1, 2, 2, 2, 2, 3, 3, 3, 3, 4, 4, 4, 4, 1, 2, 3, 4, 1, 2, 3, 4, 1, 2, 3, 4, 1, 2, 3, 4, 1, 2, 3, 4, 1, 2, 3, 4, 1, 2, 3, 4, 1, 2, 3, 4, 1, 2, 3, 4]
 
 BLEU_all = load_object("attention_result/BLEU_all")
 
@@ -28,7 +29,7 @@ for varname in BLEU_all:
   
             dicti_all[varname][model_name + "_" + str(params_use)][str(ws_use)]["BLEU"] = np.mean(BLEU_all[varname][test_num][model_name])
 
-            print(varname, test_num, model_name, np.mean(BLEU_all[varname][test_num][model_name]))
+            #print(varname, test_num, model_name, np.mean(BLEU_all[varname][test_num][model_name]))
 
 BLEU_all = load_object("UniTS_final_result/BLEU_all")
             
@@ -49,7 +50,7 @@ for varname in BLEU_all:
 
             dicti_all[varname][model_name][str(ws_use)]["BLEU"] = np.mean(BLEU_all[varname][model_name][ws_use])
 
-            print(varname, model_name, ws_use, np.mean(BLEU_all[varname][model_name][ws_use]))
+            #print(varname, model_name, ws_use, np.mean(BLEU_all[varname][model_name][ws_use]))
 
 BLEU_all = load_object("pytorch_result/BLEU_all")
             
@@ -72,11 +73,11 @@ for varname in BLEU_all:
 
                 dicti_all[varname][model_name + "_" + str(hidden_use)][str(ws_use)]["BLEU"] = np.mean(BLEU_all[varname][model_name][ws_use][hidden_use])
 
-                print(varname, model_name, ws_use, hidden_use, np.mean(BLEU_all[varname][model_name][ws_use][hidden_use]))
+                #print(varname, model_name, ws_use, hidden_use, np.mean(BLEU_all[varname][model_name][ws_use][hidden_use]))
 
 ord_metric = ["GRU_100", "RNN_100", "LSTM_100", "GRU_Att_1", "GRU_Att_2", "GRU_Att_3", "GRU_Att_4", "UniTS"]
 metric_dicti = {"BLEU": 0}
-list_ws = [2, 3, 4, 5, 6, 7, 8, 9, 10, 20, 30]
+list_ws = [2, 3, 4, 5, 6, 7, 8, 9, 10, 15, 19, 20, 25, 29, 30]
 
 for metric_name_use in list(metric_dicti.keys()):
     for model_name_use in ord_metric:

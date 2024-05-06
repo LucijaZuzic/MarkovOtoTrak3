@@ -121,7 +121,7 @@ if not os.path.isdir("mosaic_UniTS_all"):
     os.makedirs("mosaic_UniTS_all")
 
 dicti_to_print = dict()
-use_draw = False
+use_draw = True
 for metric in metric_names:
 
     if metric not in distance_predicted_new:
@@ -292,7 +292,6 @@ save_object("UniTS_final_result/distance_predicted_new", distance_predicted_new)
 rv_metric = {"R2": 2, "RMSE": 6, "MAE": 6, "R2_wt": 2, "RMSE_wt": 6, "MAE_wt": 6, "Euclid": 6}
 mul_metric = {"R2": 100, "RMSE": 1, "MAE": 1, "R2_wt": 100, "RMSE_wt": 1, "MAE_wt": 1, "Euclid": 1}
 list_ws = sorted([int(x) for x in dicti_to_print["long no abs"]["UniTS"]])
-list_ws = [2, 3, 4, 5, 6, 7, 8, 9, 10, 20, 30]
 
 dicti_all_traj = dict()
 if os.path.isfile("dicti_all_traj"):

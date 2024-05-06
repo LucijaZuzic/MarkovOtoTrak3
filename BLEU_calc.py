@@ -26,7 +26,8 @@ actual_all = dict()
 y_test_all = dict()
 ws_all = dict() 
 BLEU_all = dict()
-num_to_ws = [-1, 5, 6, 5, 6, 5, 6, 5, 6, 2, 10, 20, 30, 2, 10, 20, 30, 2, 10, 20, 30, 2, 10, 20, 30, 3, 3, 3, 3, 4, 4, 4, 4, 7, 7, 7, 7, 8, 8, 8, 8, 9, 9, 9, 9]
+num_to_ws = [-1, 5, 6, 5, 6, 5, 6, 5, 6, 2, 10, 20, 30, 2, 10, 20, 30, 2, 10, 20, 30, 2, 10, 20, 30, 3, 3, 3, 3, 4, 4, 4, 4, 7, 7, 7, 7, 8, 8, 8, 8, 9, 9, 9, 9, 15, 15, 15, 15, 19, 19, 19, 19, 25, 25, 25, 25, 29, 29, 29, 29]
+
 model_name = "GRU_Att"
 
 for varname in os.listdir("train_attention1"):
@@ -39,7 +40,7 @@ for varname in os.listdir("train_attention1"):
     ws_all[varname] = dict() 
     BLEU_all[varname] = dict()
 
-    for test_num in range(1, 45):
+    for test_num in range(1, 61):
         ws_use = num_to_ws[test_num]
 
         print(test_num)

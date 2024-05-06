@@ -11,7 +11,7 @@ def find_nearest(array,value):
     else:
         return array[idx]
     
-ws_range = [2, 3, 4, 5, 6, 7, 8, 9, 10, 19, 20, 29, 30]
+ws_range = [2, 3, 4, 5, 6, 7, 8, 9, 10, 15, 19, 20, 25, 29, 30]
 
 for ws_use in ws_range:
 
@@ -21,42 +21,57 @@ for ws_use in ws_range:
 
         varname = filename.replace("actual_train_", "")
  
-        file_pd = pd.read_csv("csv_data/dataset/" + str(ws_use) + "/" + varname + "/newdata_TEST.csv", index_col= False)
-        OT_vals = [list(file_pd["OT"][ix_sth-4:ix_sth+1]) for ix_sth in range(4, len(file_pd["OT"]), 5)]
-         
-        file_pd_pred = np.array(load_object("../UniTS3/results/all_" + str(ws_use) + "_test/preds_" + varname)).reshape(-1)
-        file_pd_true = np.array(load_object("../UniTS3/results/all_" + str(ws_use) + "_test/trues_" + varname)).reshape(-1)
+        file_pd = pd.read_csv("csv_data/dataset/" + str(ws_use) + "/" + varname + "/newdata_TEST_SHORT.csv", index_col= False) 
 
-        file_pd_transformed_pred = np.array(load_object("../UniTS3/results/all_" + str(ws_use) + "_test/preds_transformed_" + varname)).reshape(-1)
-        file_pd_transformed_true = np.array(load_object("../UniTS3/results/all_" + str(ws_use) + "_test/trues_transformed_" + varname)).reshape(-1)
-        
-        dictio = dict()
-        for ix_use in range(len(file_pd_transformed_true)):
-            val = file_pd_transformed_true[ix_use]
-            if val not in dictio:
-                dictio[val] = []
-            dictio[val].append(file_pd_transformed_pred[ix_use])
+        file_pd_transformed_pred = np.array(load_object("../UniTS3/results/all_" + str(ws_use) + "_test/preds_transformed_" + varname))
+        file_pd_transformed_true = np.array(load_object("../UniTS3/results/all_" + str(ws_use) + "_test/trues_transformed_" + varname))
+        file_pd_transformed_xs = np.array(load_object("../UniTS3/results/all_" + str(ws_use) + "_test/xs_transformed_" + varname))
 
-        keys_arr = sorted(dictio.keys())
-        dictio_close = dict()
-        for smv in file_pd["OT"]:
-            if smv not in dictio_close: 
-                if smv in dictio:
-                    vu = smv
-                else:
-                    vu = find_nearest(keys_arr, smv)
-                dictio_close[smv] = vu
- 
+        all_preds = []
+        all_trues_sorted = []
+        all_originals_sorted = []
+        for ix_use in range(len(file_pd_transformed_pred)):
+            one_pred = []
+            one_true = []
+            one_original = []
+            for ix_second in range(len(file_pd_transformed_pred[ix_use][0]) - 1):
+                one_pred.append(float(file_pd_transformed_pred[ix_use][0][ix_second]))
+                one_true.append(float(file_pd_transformed_true[ix_use][0][ix_second]))
+                one_original.append(file_pd[str(ix_second)][ix_use])
+            one_pred.append(float(file_pd_transformed_pred[ix_use][0][-1]))
+            one_true.append(float(file_pd_transformed_true[ix_use][0][-1]))
+            one_original.append(file_pd["OT"][ix_use])
+            all_preds.append(one_pred)
+            all_trues_sorted.append((one_true, ix_use))
+            all_originals_sorted.append((one_original, ix_use))
+
+        all_trues_sorted = sorted(all_trues_sorted)
+        all_originals_sorted = sorted(all_originals_sorted)
+
+        original_for_ix = dict()
+        pred_for_ix = dict()
+        print(len(file_pd.columns))
+        for ix_use in range(len(all_originals_sorted)):
+            one_original, original_ix = all_originals_sorted[ix_use]
+            one_true, true_ix = all_trues_sorted[ix_use]
+            one_pred = all_preds[true_ix]
+            original_for_ix[original_ix] = one_original
+            pred_for_ix[original_ix] = one_pred
+
         preds_smv = []
-        actual_smv = [] 
-        for smv in file_pd["OT"]:
-            preds_smv.append(np.average(dictio[dictio_close[smv]]))
-            actual_smv.append(dictio_close[smv])
+        actual_smv = []
+        for ix_use in range(len(file_pd_transformed_pred)):
+            one_original = original_for_ix[ix_use]
+            one_pred = pred_for_ix[ix_use]
+            for xa in one_original:
+                actual_smv.append(xa)
+            for xp in one_pred:
+                preds_smv.append(xp)
 
-        if not os.path.isdir("UniTS_final_res/" + str(ws_use)):
-            os.makedirs("UniTS_final_res/" + str(ws_use))
-  
         df_new = pd.DataFrame({"predicted": preds_smv, "actual": actual_smv})
+
+        if not os.path.isdir("UniTS_final_res/" + str(ws_use) + "/"):
+            os.makedirs("UniTS_final_res/" + str(ws_use) + "/")
 
         df_new.to_csv("UniTS_final_res/" + str(ws_use) + "/" + varname + ".csv", index = False) 
 

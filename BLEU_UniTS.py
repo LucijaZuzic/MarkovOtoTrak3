@@ -25,7 +25,7 @@ predicted_all = dict()
 y_test_all = dict()
 ws_all = dict() 
 BLEU_all = dict()
-ws_range = [2, 3, 4, 5, 6, 7, 8, 9, 10, 19, 20, 29, 30]
+ws_range = [2, 3, 4, 5, 6, 7, 8, 9, 10, 15, 19, 20, 25, 29, 30]
 model_name = "UniTS"
 
 for varname in os.listdir("final_train_pytorch"):
@@ -57,10 +57,12 @@ for varname in os.listdir("final_train_pytorch"):
             
             ws_all[varname][model_name][ws_use][k] = ws_use
             
-            x_test_part, y_test_part = get_XY(file_object_test[k], ws_use, 1, 1)
+            x_test_part, y_test_part = get_XY(file_object_test[k], ws_use, ws_use + 1, 1)
             
             y_test_all[varname][model_name][ws_use][k] = []
             for ix1 in range(len(y_test_part)): 
+                for ix2 in range(len(x_test_part[ix1])): 
+                    y_test_all[varname][model_name][ws_use][k].append(x_test_part[ix1][ix2])
                 for ix2 in range(len(y_test_part[ix1])): 
                     y_test_all[varname][model_name][ws_use][k].append(y_test_part[ix1][ix2])
 

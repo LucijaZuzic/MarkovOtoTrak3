@@ -4,7 +4,7 @@ import numpy as np
 dicti_all = load_object("dicti_all")
 ord_metric = ["GRU_100", "RNN_100", "LSTM_100", "GRU_Att_1", "GRU_Att_2", "GRU_Att_3", "GRU_Att_4", "UniTS"]
 metric_dicti = {"NRMSE": 2, "R2": 2, "MAE": 0, "RMSE": 0}
-list_ws = [2, 3, 4, 5, 6, 7, 8, 9, 10, 20, 30]
+list_ws = [2, 3, 4, 5, 6, 7, 8, 9, 10, 15, 19, 20, 25, 29, 30]
 
 for metric_name_use in list(metric_dicti.keys()):
     for model_name_use in ord_metric:
@@ -35,7 +35,7 @@ for metric_name_use in list(metric_dicti.keys()):
                 break
             for varname in dicti_all:
                 str_pr += varname
-                for val_ws in list_ws: 
+                for val_ws in list_ws:
                     vv = dicti_all[varname][model_name_use][str(val_ws)][metric_name_use]  
                     vv = np.round(vv * (10 ** metric_dicti[metric_name_use]) * (10 ** mul_metric), rv_metric)
                     str_pr += " & $" + str(vv) + "$"

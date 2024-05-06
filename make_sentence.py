@@ -11,8 +11,8 @@ translate_model = {"GRU_100": "GRU model", "RNN_100": "RNN model", "LSTM_100": "
         "GRU_Att_3": "GRU attention model using the hyperparameters from experiment 3", 
         "GRU_Att_4": "GRU attention model using the hyperparameters from experiment 4"}
 translate_varname = {"direction": "heading", "speed": "speed", "longitude_no_abs": "$x$ offset", "latitude_no_abs": "$y$ offset", "time": "time intervals"}
-translate_ws = {"2": "two", "3": "three", "4": "four", "5": "five", "6": "six", "7": "seven", "8": "eight", "9": "nine", "10": "ten", "20": "twenty", "30": "thirty"}
-list_ws = [2, 3, 4, 5, 6, 7, 8, 9, 10, 20, 30]
+translate_ws = {"2": "two", "3": "three", "4": "four", "5": "five", "6": "six", "7": "seven", "8": "eight", "9": "nine", "10": "ten", "15": "fifteen", "19": "nineteen", "20": "twenty", "25": "twenty-five", "29": "twenty-nine", "30": "thirty"}
+list_ws = [2, 3, 4, 5, 6, 7, 8, 9, 10, 15, 19, 20, 25, 29, 30]
 
 for metric_name_use in list(metric_dicti.keys()):
     for varname in dicti_all:

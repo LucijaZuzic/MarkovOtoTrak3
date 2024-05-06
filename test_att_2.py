@@ -154,6 +154,12 @@ if train_a_model:
     for filename in os.listdir("actual_train"):
         for ws_use in ws_range:
             varname = filename.replace("actual_train_", "")
+            if "dir" in varname or "lat" in varname:
+                continue
+            if "long" in varname or "speed" in varname:
+                continue
+            if "time" in varname and ws_use < 20:
+                continue
 
             src_field, trg_field = build_fields()
             train_set, val_set, test_set = get_datasets(train_path="tokenized_data/" + varname + "/" + varname + "_train_" + str(ws_use) + ".csv", 

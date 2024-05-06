@@ -5,7 +5,7 @@ from sklearn.metrics import r2_score, mean_absolute_error, mean_squared_error
 from utilities import load_object, save_object
 import numpy as np
 
-ws_range = [2, 3, 4, 5, 6, 7, 8, 9, 10, 19, 20, 29, 30]
+ws_range = [2, 3, 4, 5, 6, 7, 8, 9, 10, 15, 19, 20, 25, 29, 30]
  
 dicti_to_print = dict()
 
@@ -66,7 +66,7 @@ for varname in os.listdir("final_train_pytorch"):
 rv_metric = {"R2": 2, "RMSE": 6, "MAE": 6, "NRMSE": 2}
 mul_metric = {"R2": 100, "RMSE": 1, "MAE": 1, "NRMSE": 100}
 list_ws = sorted([int(x) for x in dicti_to_print["speed"]["UniTS"]])
-list_ws = [2, 3, 4, 5, 6, 7, 8, 9, 10, 20, 30]
+list_ws = [2, 3, 4, 5, 6, 7, 8, 9, 10, 15, 19, 20, 25, 29, 30]
 
 dicti_all = dict()
 if os.path.isfile("dicti_all"):
