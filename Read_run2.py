@@ -1,0 +1,92 @@
+from utilities import load_object
+import os
+import numpy as np
+import pandas as pd
+import math
+
+def find_nearest(array,value):
+    idx = np.searchsorted(array, value, side="left")
+    if idx > 0 and (idx == len(array) or math.fabs(value - array[idx-1]) < math.fabs(value - array[idx])):
+        return array[idx-1]
+    else:
+        return array[idx]
+    
+ws_range = [2, 3, 4, 5, 6, 7, 8, 9, 10, 15, 19, 20, 25, 29, 30]
+
+for ws_use in ws_range:
+
+    if not os.path.isdir("csv_data/data_provider/" + str(ws_use)):
+        os.makedirs("csv_data/data_provider/" + str(ws_use))
+    for filename in os.listdir("actual_train"):
+
+        varname = filename.replace("actual_train_", "")
+ 
+        file_pd = pd.read_csv("csv_data/dataset/" + str(ws_use) + "/" + varname + "/newdata_TEST_SHORT.csv", index_col= False) 
+
+        file_pd_transformed_pred = np.array(load_object("../UniTS3/results/all_" + str(ws_use) + "_test/preds_transformed_" + varname))
+        file_pd_transformed_true = np.array(load_object("../UniTS3/results/all_" + str(ws_use) + "_test/trues_transformed_" + varname))
+        file_pd_transformed_xs = np.array(load_object("../UniTS3/results/all_" + str(ws_use) + "_test/xs_transformed_" + varname))
+
+        all_preds = []
+        all_trues_sorted = []
+        all_originals_sorted = []
+        for ix_use in range(len(file_pd_transformed_pred)):
+            one_pred = []
+            one_true = []
+            one_original = []
+            for ix_second in range(len(file_pd_transformed_pred[ix_use][0]) - 1):
+                one_pred.append(float(file_pd_transformed_pred[ix_use][0][ix_second]))
+                one_true.append(float(file_pd_transformed_true[ix_use][0][ix_second]))
+                one_original.append(file_pd[str(ix_second)][ix_use])
+            one_pred.append(float(file_pd_transformed_pred[ix_use][0][-1]))
+            one_true.append(float(file_pd_transformed_true[ix_use][0][-1]))
+            one_original.append(file_pd["OT"][ix_use])
+            all_preds.append(one_pred)
+            all_trues_sorted.append((one_true, ix_use))
+            all_originals_sorted.append((one_original, ix_use))
+
+        all_trues_sorted = sorted(all_trues_sorted)
+        all_originals_sorted = sorted(all_originals_sorted)
+
+        original_for_ix = dict()
+        true_for_ix = dict()
+        pred_for_ix = dict()
+        print(len(file_pd.columns))
+        for ix_use in range(len(all_originals_sorted)):
+            one_original, original_ix = all_originals_sorted[ix_use]
+            one_true, true_ix = all_trues_sorted[ix_use]
+            one_pred = all_preds[true_ix]
+            original_for_ix[original_ix] = one_original
+            true_for_ix[original_ix] = one_true
+            pred_for_ix[original_ix] = one_pred
+
+        preds_smv = []
+        actual_smv = []
+        err1 = []
+        err2 = []
+        err3 = []
+        for ix_use in range(len(file_pd_transformed_pred)):
+            one_original = original_for_ix[ix_use]
+            one_true = true_for_ix[ix_use]
+            one_pred = pred_for_ix[ix_use]
+            e1 = 0
+            e2 = 0
+            e3 = 0
+            for ix_2 in range(len(one_original)):
+                e1 += abs(one_original[ix_2] - one_true[ix_2])
+                e2 += abs(one_original[ix_2] - one_pred[ix_2])
+                e3 += abs(one_true[ix_2] - one_pred[ix_2])
+            err1.append(e1)
+            err2.append(e2)
+            err3.append(e3)
+            for xa in one_original:
+                actual_smv.append(xa)
+            for xp in one_pred:
+                preds_smv.append(xp)
+        print(varname, np.average(err1), np.max(e1), np.min(e1))
+
+        df_new = pd.DataFrame({"predicted": preds_smv, "actual": actual_smv})
+
+        #df_new.to_csv("UniTS_final_res/" + str(ws_use) + "/" + varname + ".csv", index = False) 
+
+        #print(file_pd.columns)
