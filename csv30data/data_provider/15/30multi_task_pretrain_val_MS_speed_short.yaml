@@ -1,0 +1,15 @@
+task_dataset:
+ speed:
+  task_name: pretrain_long_term_forecast
+  dataset: speed
+  data: custom
+  embed: timeF
+  root_path: dataset_new/15/speed
+  data_path: newdata_TRAIN_VAL_short.csv
+  features: MS
+  seq_len: 15
+  label_len: 15
+  pred_len: 15
+  enc_in: 15
+  dec_in: 15
+  c_out: 15

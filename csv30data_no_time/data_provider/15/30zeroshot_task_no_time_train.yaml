@@ -1,0 +1,60 @@
+task_dataset:
+ direction:
+  task_name: long_term_forecast
+  dataset: direction
+  data: custom
+  embed: timeF
+  root_path: dataset_new/15/direction
+  data_path: newdata_TRAIN.csv
+  features: M
+  seq_len: 15
+  label_len: 15
+  pred_len: 15
+  enc_in: 15
+  dec_in: 15
+  c_out: 15
+
+ latitude_no_abs:
+  task_name: long_term_forecast
+  dataset: latitude_no_abs
+  data: custom
+  embed: timeF
+  root_path: dataset_new/15/latitude_no_abs
+  data_path: newdata_TRAIN.csv
+  features: M
+  seq_len: 15
+  label_len: 15
+  pred_len: 15
+  enc_in: 15
+  dec_in: 15
+  c_out: 15
+
+ longitude_no_abs:
+  task_name: long_term_forecast
+  dataset: longitude_no_abs
+  data: custom
+  embed: timeF
+  root_path: dataset_new/15/longitude_no_abs
+  data_path: newdata_TRAIN.csv
+  features: M
+  seq_len: 15
+  label_len: 15
+  pred_len: 15
+  enc_in: 15
+  dec_in: 15
+  c_out: 15
+
+ speed:
+  task_name: long_term_forecast
+  dataset: speed
+  data: custom
+  embed: timeF
+  root_path: dataset_new/15/speed
+  data_path: newdata_TRAIN.csv
+  features: M
+  seq_len: 15
+  label_len: 15
+  pred_len: 15
+  enc_in: 15
+  dec_in: 15
+  c_out: 15

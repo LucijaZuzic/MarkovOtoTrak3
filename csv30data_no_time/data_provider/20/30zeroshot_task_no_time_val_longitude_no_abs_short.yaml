@@ -1,0 +1,15 @@
+task_dataset:
+ longitude_no_abs:
+  task_name: long_term_forecast
+  dataset: longitude_no_abs
+  data: custom
+  embed: timeF
+  root_path: dataset_new/20/longitude_no_abs
+  data_path: newdata_VAL_short.csv
+  features: M
+  seq_len: 20
+  label_len: 20
+  pred_len: 20
+  enc_in: 20
+  dec_in: 20
+  c_out: 20
