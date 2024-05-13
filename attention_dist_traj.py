@@ -312,7 +312,7 @@ for metric_name_use in list(rv_metric.keys()):
         first_line = metric_name_use + " " + varname
         for model_name_use in dicti_to_print[varname]:
             for val_ws in list_ws:
-                first_line += " & $" + str(val_ws) + "$"
+                first_line += " & $" + str(val_ws) + "$s"
             break
         print(first_line + " \\\\ \\hline")
         for model_name_use in dicti_to_print[varname]:
@@ -339,7 +339,7 @@ for metric_name_use in list(rv_metric.keys()):
         first_line = metric_name_use + " " + model_name_use
         for varname in dicti_to_print:
             for val_ws in list_ws:
-                first_line += " & $" + str(val_ws) + "$"
+                first_line += " & $" + str(val_ws) + "$s"
             break
         print(first_line + " \\\\ \\hline")
         for varname in dicti_to_print:
