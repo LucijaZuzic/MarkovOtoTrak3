@@ -240,6 +240,30 @@ for test_num in range(1, 61):
             predicted_long[model_name][test_num]["long speed dir"][k].append(predicted_long[model_name][test_num]["long speed dir"][k][-1] + new_long)
             predicted_lat[model_name][test_num]["lat speed dir"][k].append(predicted_lat[model_name][test_num]["lat speed dir"][k][-1] + new_lat)
             
+    if "long speed actual dir" not in predicted_long[model_name][test_num]:
+        predicted_long[model_name][test_num]["long speed actual dir"] = dict()
+    if "lat speed actual dir" not in predicted_lat[model_name][test_num]:
+        predicted_lat[model_name][test_num]["lat speed actual dir"] = dict()    
+
+    for k in predicted_all["speed"][model_name][test_num]:
+        print(model_name, k, "long speed actual dir")
+        predicted_long[model_name][test_num]["long speed actual dir"][k] = [0]
+        predicted_lat[model_name][test_num]["lat speed actual dir"][k] = [0]
+    
+        max_offset_speed_dir_time = max(max(ws_all["speed"][model_name][test_num], ws_all["direction"][model_name][test_num]), ws_all["time"][model_name][test_num])
+        speed_offset_time = max_offset_speed_dir_time - ws_all["speed"][model_name][test_num]
+        dir_offset_time = max_offset_speed_dir_time - ws_all["direction"][model_name][test_num]
+        time_offset_time = max_offset_speed_dir_time - ws_all["time"][model_name][test_num]
+        range_speed_time = len(y_test_all["speed"][model_name][test_num][k]) - speed_offset_time
+        range_dir_time = len(y_test_all["direction"][model_name][test_num][k]) - dir_offset_time
+        range_time_time = len(y_test_all["time"][model_name][test_num][k]) - time_offset_time
+        min_range_speed_dir_time = min(min(range_speed_time, range_dir_time), range_time_time)
+
+        for ix in range(min_range_speed_dir_time):
+            new_long, new_lat = get_sides_from_angle(predicted_all["speed"][model_name][test_num][k][ix + speed_offset_time] / 111 / 0.1 / 3600 * y_test_all["time"][model_name][test_num][k][ix + time_offset_time], change_angle(predicted_all["direction"][model_name][test_num][k][ix + dir_offset_time], k))
+            predicted_long[model_name][test_num]["long speed actual dir"][k].append(predicted_long[model_name][test_num]["long speed actual dir"][k][-1] + new_long)
+            predicted_lat[model_name][test_num]["lat speed actual dir"][k].append(predicted_lat[model_name][test_num]["lat speed actual dir"][k][-1] + new_lat)
+            
     if "long speed ones dir" not in predicted_long[model_name][test_num]:
         predicted_long[model_name][test_num]["long speed ones dir"] = dict()
     if "lat speed ones dir" not in predicted_lat[model_name][test_num]:

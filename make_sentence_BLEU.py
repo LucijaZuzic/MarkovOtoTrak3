@@ -11,10 +11,10 @@ def get_cat(val):
     return "Quality often better than human"
 
 dicti_all = load_object("dicti_all_BLEU")
-ord_metric = ["GRU_100", "RNN_100", "LSTM_100", "GRU_Att_1", "GRU_Att_2", "GRU_Att_3", "GRU_Att_4", "UniTS"]
+ord_metric = ["GRU_100", "RNN_100", "LSTM_100", "GRU_Att_1", "GRU_Att_2", "GRU_Att_3", "GRU_Att_4", "UniTS", "UniTS_no_time", "UniTS_varname"]
 metric_dicti = {"BLEU": 0}
 translate_metric = {"BLEU": "BLEU"}
-translate_model = {"GRU_100": "GRU model", "RNN_100": "RNN model", "LSTM_100": "LSTM model", "UniTS": "UniTS model",
+translate_model = {"GRU_100": "GRU model", "RNN_100": "RNN model", "LSTM_100": "LSTM model", "UniTS": "UniTS model", "UniTS_no_time": "UniTS model trained without time intervals", "UniTS_varname": "UniTS model trained separately for each variable",
         "GRU_Att_1": "GRU attention model using the hyperparameters from experiment 1", 
         "GRU_Att_2": "GRU attention model using the hyperparameters from experiment 2", 
         "GRU_Att_3": "GRU attention model using the hyperparameters from experiment 3", 

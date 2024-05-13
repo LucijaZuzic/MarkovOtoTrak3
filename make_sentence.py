@@ -2,10 +2,10 @@ from utilities import load_object
 import numpy as np
 
 dicti_all = load_object("dicti_all")
-ord_metric = ["GRU_100", "RNN_100", "LSTM_100", "GRU_Att_1", "GRU_Att_2", "GRU_Att_3", "GRU_Att_4", "UniTS"]
+ord_metric = ["GRU_100", "RNN_100", "LSTM_100", "GRU_Att_1", "GRU_Att_2", "GRU_Att_3", "GRU_Att_4", "UniTS", "UniTS_no_time", "UniTS_varname"]
 metric_dicti = {"NRMSE": 2, "R2": 2, "MAE": 0, "RMSE": 0}
 translate_metric = {"NRMSE": "NRMSE (\\%)", "R2": "$R^{2}$ (\\%)", "MAE": "MAE", "RMSE": "RMSE"}
-translate_model = {"GRU_100": "GRU model", "RNN_100": "RNN model", "LSTM_100": "LSTM model", "UniTS": "UniTS model",
+translate_model = {"GRU_100": "GRU model", "RNN_100": "RNN model", "LSTM_100": "LSTM model", "UniTS": "UniTS model", "UniTS_no_time": "UniTS model trained without time intervals", "UniTS_varname": "UniTS model trained separately for each variable",
         "GRU_Att_1": "GRU attention model using the hyperparameters from experiment 1", 
         "GRU_Att_2": "GRU attention model using the hyperparameters from experiment 2", 
         "GRU_Att_3": "GRU attention model using the hyperparameters from experiment 3", 
@@ -13,7 +13,6 @@ translate_model = {"GRU_100": "GRU model", "RNN_100": "RNN model", "LSTM_100": "
 translate_varname = {"direction": "heading", "speed": "speed", "longitude_no_abs": "$x$ offset", "latitude_no_abs": "$y$ offset", "time": "time intervals"}
 translate_ws = {"2": "two", "3": "three", "4": "four", "5": "five", "6": "six", "7": "seven", "8": "eight", "9": "nine", "10": "ten", "15": "fifteen", "19": "nineteen", "20": "twenty", "25": "twenty-five", "29": "twenty-nine", "30": "thirty"}
 list_ws = [2, 3, 4, 5, 6, 7, 8, 9, 10, 15, 19, 20, 25, 29, 30]
-list_ws = [2, 5, 10, 20, 30]
 
 for metric_name_use in list(metric_dicti.keys()):
     for varname in dicti_all:

@@ -52,6 +52,48 @@ for varname in BLEU_all:
 
             #print(varname, model_name, ws_use, np.mean(BLEU_all[varname][model_name][ws_use]))
 
+BLEU_all = load_object("UniTS_final_result_no_time/BLEU_all")
+            
+for varname in BLEU_all:
+    
+    for model_name in BLEU_all[varname]:
+
+        for ws_use in BLEU_all[varname][model_name]:
+  
+            if varname not in dicti_all:
+                dicti_all[varname] = dict()
+
+            if model_name not in dicti_all[varname]:
+                dicti_all[varname][model_name] = dict()
+
+            if str(ws_use) not in dicti_all[varname][model_name]:
+                dicti_all[varname][model_name][str(ws_use)] = dict()
+
+            dicti_all[varname][model_name][str(ws_use)]["BLEU"] = np.mean(BLEU_all[varname][model_name][ws_use])
+
+            #print(varname, model_name, ws_use, np.mean(BLEU_all[varname][model_name][ws_use]))
+
+BLEU_all = load_object("UniTS_final_result_varname/BLEU_all")
+            
+for varname in BLEU_all:
+    
+    for model_name in BLEU_all[varname]:
+
+        for ws_use in BLEU_all[varname][model_name]:
+  
+            if varname not in dicti_all:
+                dicti_all[varname] = dict()
+
+            if model_name not in dicti_all[varname]:
+                dicti_all[varname][model_name] = dict()
+
+            if str(ws_use) not in dicti_all[varname][model_name]:
+                dicti_all[varname][model_name][str(ws_use)] = dict()
+
+            dicti_all[varname][model_name][str(ws_use)]["BLEU"] = np.mean(BLEU_all[varname][model_name][ws_use])
+
+            #print(varname, model_name, ws_use, np.mean(BLEU_all[varname][model_name][ws_use]))
+
 BLEU_all = load_object("pytorch_result/BLEU_all")
             
 for varname in BLEU_all:
@@ -75,7 +117,7 @@ for varname in BLEU_all:
 
                 #print(varname, model_name, ws_use, hidden_use, np.mean(BLEU_all[varname][model_name][ws_use][hidden_use]))
 
-ord_metric = ["GRU_100", "RNN_100", "LSTM_100", "GRU_Att_1", "GRU_Att_2", "GRU_Att_3", "GRU_Att_4", "UniTS"]
+ord_metric = ["GRU_100", "RNN_100", "LSTM_100", "GRU_Att_1", "GRU_Att_2", "GRU_Att_3", "GRU_Att_4", "UniTS", "UniTS_no_time", "UniTS_varname"]
 metric_dicti = {"BLEU": 0}
 list_ws = [2, 3, 4, 5, 6, 7, 8, 9, 10, 15, 19, 20, 25, 29, 30]
 

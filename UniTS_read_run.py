@@ -23,9 +23,9 @@ for ws_use in ws_range:
  
         file_pd = pd.read_csv("csv_data/dataset/" + str(ws_use) + "/" + varname + "/newdata_TEST_SHORT.csv", index_col= False) 
 
-        file_pd_transformed_pred = np.array(load_object("../UniTS3/results/all_" + str(ws_use) + "_test/preds_transformed_" + varname))
-        file_pd_transformed_true = np.array(load_object("../UniTS3/results/all_" + str(ws_use) + "_test/trues_transformed_" + varname))
-        file_pd_transformed_xs = np.array(load_object("../UniTS3/results/all_" + str(ws_use) + "_test/xs_transformed_" + varname))
+        file_pd_transformed_pred = np.array(load_object("../UniTS/results/all_" + str(ws_use) + "_test/preds_transformed_" + varname))
+        file_pd_transformed_true = np.array(load_object("../UniTS/results/all_" + str(ws_use) + "_test/trues_transformed_" + varname))
+        file_pd_transformed_xs = np.array(load_object("../UniTS/results/all_" + str(ws_use) + "_test/xs_transformed_" + varname))
 
         all_preds = []
         all_trues_sorted = []

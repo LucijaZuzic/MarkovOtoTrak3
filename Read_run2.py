@@ -22,29 +22,46 @@ for ws_use in ws_range:
         varname = filename.replace("actual_train_", "")
  
         file_pd = pd.read_csv("csv_data/dataset/" + str(ws_use) + "/" + varname + "/newdata_TEST_SHORT.csv", index_col= False) 
+        file_pdTR = pd.read_csv("csv_data/dataset/" + str(ws_use) + "/" + varname + "/newdata_TRAIN_SHORT.csv", index_col= False) 
+        file_pdV = pd.read_csv("csv_data/dataset/" + str(ws_use) + "/" + varname + "/newdata_VAL_SHORT.csv", index_col= False)
 
-        file_pd_transformed_pred = np.array(load_object("../UniTS3/results/all_" + str(ws_use) + "_test/preds_transformed_" + varname))
-        file_pd_transformed_true = np.array(load_object("../UniTS3/results/all_" + str(ws_use) + "_test/trues_transformed_" + varname))
-        file_pd_transformed_xs = np.array(load_object("../UniTS3/results/all_" + str(ws_use) + "_test/xs_transformed_" + varname))
-
+        file_pd_transformed_pred = np.array(load_object("../UniTS/results/all_" + str(ws_use) + "_test/preds_transformed_" + varname))
+        file_pd_transformed_true = np.array(load_object("../UniTS/results/all_" + str(ws_use) + "_test/trues_transformed_" + varname))
+        file_pd_transformed_xs = np.array(load_object("../UniTS/results/all_" + str(ws_use) + "_test/xs_transformed_" + varname))
+        
         all_preds = []
         all_trues_sorted = []
         all_originals_sorted = []
+        all_TR = []
+        all_VA = []
         for ix_use in range(len(file_pd_transformed_pred)):
             one_pred = []
             one_true = []
-            one_original = []
+            one_original = [] 
             for ix_second in range(len(file_pd_transformed_pred[ix_use][0]) - 1):
                 one_pred.append(float(file_pd_transformed_pred[ix_use][0][ix_second]))
                 one_true.append(float(file_pd_transformed_true[ix_use][0][ix_second]))
-                one_original.append(file_pd[str(ix_second)][ix_use])
+                one_original.append(file_pd[str(ix_second)][ix_use]) 
             one_pred.append(float(file_pd_transformed_pred[ix_use][0][-1]))
             one_true.append(float(file_pd_transformed_true[ix_use][0][-1]))
-            one_original.append(file_pd["OT"][ix_use])
+            one_original.append(file_pd["OT"][ix_use]) 
             all_preds.append(one_pred)
             all_trues_sorted.append((one_true, ix_use))
-            all_originals_sorted.append((one_original, ix_use))
-
+            all_originals_sorted.append((one_original, ix_use)) 
+        for ix_use in range(len(file_pdTR)):
+            one_TR = []
+            for ix_second in range(len(file_pd_transformed_pred[0][0]) - 1):
+                one_TR.append(file_pdTR[str(ix_second)][ix_use])
+            one_TR.append(file_pdTR["OT"][ix_use])
+            all_TR.append((one_TR, ix_use))
+        for ix_use in range(len(file_pdV)):
+            one_VA = []
+            for ix_second in range(len(file_pd_transformed_pred[0][0]) - 1):
+                one_VA.append(file_pdV[str(ix_second)][ix_use])
+            one_VA.append(file_pdV["OT"][ix_use])
+            all_VA.append((one_VA, ix_use))
+        print(all_trues_sorted[0], all_originals_sorted[0], all_TR[0], all_VA[0])
+        
         all_trues_sorted = sorted(all_trues_sorted)
         all_originals_sorted = sorted(all_originals_sorted)
 
@@ -65,6 +82,9 @@ for ws_use in ws_range:
         err1 = []
         err2 = []
         err3 = []
+        o = []
+        p = []
+        t = []
         for ix_use in range(len(file_pd_transformed_pred)):
             one_original = original_for_ix[ix_use]
             one_true = true_for_ix[ix_use]
@@ -83,7 +103,12 @@ for ws_use in ws_range:
                 actual_smv.append(xa)
             for xp in one_pred:
                 preds_smv.append(xp)
-        print(varname, np.average(err1), np.max(e1), np.min(e1))
+            o.append(one_original)
+            p.append(one_pred)
+            t.append(one_true)
+        print(varname, np.average(err1), np.max(err1), np.min(err1))
+        print(o[np.argmax(err1)], t[np.argmax(err1)])
+        print(o[np.argmin(err1)], t[np.argmin(err1)])
 
         df_new = pd.DataFrame({"predicted": preds_smv, "actual": actual_smv})
 

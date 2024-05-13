@@ -35,7 +35,8 @@ def translate_category(long):
     translate_name = {
         "long no abs": "$x$ and $y$ offset",  
         "long speed dir": "Speed, heading, and time", 
-        "long speed ones dir": "Speed, heading, and a 1s time interval", 
+        "long speed ones dir": "Speed, heading, and a 1s time interval",
+        "long speed actual dir": "Speed, heading, and actual time"
     }
     if long in translate_name:
         return translate_name[long]
@@ -226,7 +227,7 @@ for metric in metric_names:
                         vehicle = split_file_veh[0].replace("Vehicle_", "")
                         ride = split_file_veh[-1].replace("events_", "").replace(".csv", "")
 
-                        if use_draw:
+                        if use_draw or "actual" in dist_name:
                             
                             filename = "mosaic_attention_all/Vehicle_" + vehicle + "_events_" + ride + "_" + model_name + "_" + str(test_num) + "_" + dist_name + "_" + dist_name.replace("long", "lat") + "_test_mosaic.png"
                             draw_mosaic_one(actual_long_one, actual_lat_one, predicted_long_one, predicted_lat_one, k, model_name, filename, test_num, dist_name)
@@ -247,12 +248,12 @@ for metric in metric_names:
                             predicted_long_lat.append([predicted_long_one[ix_use_len], predicted_lat_one[ix_use_len]])
                             predicted_long_lat_time.append([predicted_long_one[ix_use_len], predicted_lat_one[ix_use_len], time_predicted_cumulative[ix_use_len]])
                     
-                    if use_draw:
+                    if use_draw or "actual" in dist_name:
 
                         filename_veh = "mosaic_attention/Vehicle_" + str(v) + "_" + model_name + "_" + str(test_num) + "_" + dist_name.replace("long", "lat") + "_test_mosaic.png"
                         draw_mosaic(all_actual_vehicle, all_predicted, filename_veh)
 
-                if use_draw:
+                if use_draw or "actual" in dist_name:
 
                     filename = "mosaic_attention/all_" + model_name + "_" + str(test_num) + "_" + dist_name.replace("long", "lat") + "_test_mosaic.png"
                     draw_mosaic(all_actual, all_predicted, filename)

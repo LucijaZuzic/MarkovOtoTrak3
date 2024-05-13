@@ -266,7 +266,8 @@ def translate_category(long):
     translate_name = {
         "long no abs": "$x$ and $y$ offset",  
         "long speed dir": "Speed, heading, and time", 
-        "long speed ones dir": "Speed, heading, and a 1s time interval", 
+        "long speed ones dir": "Speed, heading, and a 1s time interval",
+        "long speed actual dir": "Speed, heading, and actual time"
     }
     if long in translate_name:
         return translate_name[long]

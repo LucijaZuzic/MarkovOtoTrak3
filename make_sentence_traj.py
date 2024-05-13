@@ -3,15 +3,18 @@ import numpy as np
 
 
 dicti_all = load_object("dicti_all_traj")
-ord_metric = ["GRU_100", "RNN_100", "LSTM_100", "GRU_Att_1", "GRU_Att_2", "GRU_Att_3", "GRU_Att_4", "UniTS"]
+ord_metric = ["GRU_100", "RNN_100", "LSTM_100", "GRU_Att_1", "GRU_Att_2", "GRU_Att_3", "GRU_Att_4", "UniTS", "UniTS_no_time", "UniTS_varname"]
 metric_dicti = {"Euclid": 0, "R2": 2, "MAE": 0, "RMSE": 0, "R2_wt": 2, "MAE_wt": 0, "RMSE_wt": 0}
 translate_metric = {"Euclid": "Euclidean distance", "R2": "$R^{2}$ (\\%)", "MAE": "MAE", "RMSE": "RMSE", "R2_wt": "$R^{2}$ (\\%)", "MAE_wt": "MAE", "RMSE_wt": "RMSE"}
-translate_model = {"GRU_100": "GRU model", "RNN_100": "RNN model", "LSTM_100": "LSTM model", "UniTS": "UniTS model",
+translate_model = {"GRU_100": "GRU model", "RNN_100": "RNN model", "LSTM_100": "LSTM model", "UniTS": "UniTS model", "UniTS_no_time": "UniTS model trained without time intervals", "UniTS_varname": "UniTS model trained separately for each variable",
         "GRU_Att_1": "GRU attention model using the hyperparameters from experiment 1", 
         "GRU_Att_2": "GRU attention model using the hyperparameters from experiment 2", 
         "GRU_Att_3": "GRU attention model using the hyperparameters from experiment 3", 
         "GRU_Att_4": "GRU attention model using the hyperparameters from experiment 4"}
-translate_varname = {"long speed ones dir": "$x$ and $y$ offset", "long speed dir": "speed, heading, and a fixed one-second time interval", "long no abs": "speed, heading, and time intervals"}
+translate_varname = {"long speed ones dir": "speed, heading, and a fixed one-second time interval",
+                    "long speed dir": "speed, heading, and time intervals",
+                    "long speed actual dir": "speed, heading, and the actual time interval",
+                    "long no abs": "$x$ and $y$ offset"}
 translate_ws = {"2": "two", "3": "three", "4": "four", "5": "five", "6": "six", "7": "seven", "8": "eight", "9": "nine", "10": "ten", "15": "fifteen", "19": "nineteen", "20": "twenty", "25": "twenty-five", "29": "twenty-nine", "30": "thirty"}
 list_ws = [2, 3, 4, 5, 6, 7, 8, 9, 10, 15, 19, 20, 25, 29, 30]
 
